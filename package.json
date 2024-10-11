@@ -1,0 +1,33 @@
+{
+	"name": "webring",
+	"version": "0.1.0",
+	"description": "",
+	"main": "src/index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"preview": "vite preview",
+		"build": "vite build",
+		"ci-build": "vite build"
+	},
+	"keywords": [ ],
+	"author": "",
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^5.1.4",
+		"cross-env": "^7.0.3",
+		"dotenv": "^16.4.5",
+		"eslint": "^9.12.0",
+		"rimraf": "^6.0.1",
+		"tailwindcss": "^3.4.13",
+		"typescript": "^5.6.3",
+		"unplugin-auto-import": "^0.18.3",
+		"vite": "^5.4.8",
+		"vite-plugin-html": "^3.2.2"
+	},
+	"dependencies": {
+		"@tailwindcss/forms": "^0.5.9",
+		"@vueuse/core": "^11.1.0",
+		"vue": "^3.5.11"
+	},
+	"packageManager": "pnpm@8.12.1+sha512.6705ea1966adb6587053e6cfe6fddc377f81066228daf736c4490012f44f2ff1bf0c713bb8f3145fce0e3ef669c7c15f19a59ac157838951f234c17b81ca655d"
+}

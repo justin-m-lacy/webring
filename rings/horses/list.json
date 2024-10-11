@@ -1,0 +1,18 @@
+{
+	"sites": [
+
+		{
+			"url": "www.google.com",
+			"banner": ""
+		},
+		{
+			"url": "www.reddit.com",
+			"banner": ""
+		},
+		{
+			"url": "www.twitter.com",
+			"banner": ""
+		}
+	]
+
+}
