@@ -10,6 +10,20 @@ type SiteData = {
 	banner?: string,
 }
 
+const template = document.createElement('template');
+template.innerHTML = `
+<style>
+.base {
+	display: flex;
+	justify-content: space-evenly;
+}
+.weblink {
+	padding:8px 0;
+}
+.curlink {
+}
+</style>`;
+
 customElements.define('myth-ring', class extends HTMLElement {
 
 	static observedAttributes = ["url"];
@@ -33,6 +47,11 @@ customElements.define('myth-ring', class extends HTMLElement {
 	connectedCallback() {
 
 		this.attachShadow({ mode: 'open' });
+		const base = this.shadowRoot!.appendChild(
+			template.content.cloneNode(true)
+		) as HTMLElement;
+
+		base.classList.add('base');
 
 		this.url = this.getAttribute('url');
 
@@ -96,6 +115,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 		const site = sites[index];
 
 		const elm = document.createElement('a');
+		elm.classList.add('weblink')
 		elm.href = site.url;
 		elm.innerText = `${site.title ?? site.url}`;
 
@@ -107,27 +127,30 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		const sites = await this.fetchListData();
 
-		if (!sites) return;
+		if (!sites || !this.shadowRoot) return;
 
 		try {
 
 			const curIndex = this.getSiteIndex(sites);
+			// Current site might not be in the webring.
+			// Show random prev/next links.
 			const useIndex = curIndex !== null ?
 				curIndex : Math.floor(Math.random() * sites.length);
 
-			console.log(`found ind: ${curIndex}`);
-			console.log(`use index: ${useIndex}`);
-
 			const prevLink = this.makeSiteLink(sites, useIndex - 1);
-			this.shadowRoot?.appendChild(prevLink);
+			this.shadowRoot.appendChild(prevLink);
 
 			if (curIndex !== null) {
-				this.shadowRoot?.appendChild(this.makeSiteLink(sites, curIndex));
-				this.shadowRoot?.appendChild(
+				const curSite = this.shadowRoot.appendChild(
+					this.makeSiteLink(sites, curIndex)
+				);
+				curSite.classList.add('curlink');
+
+				this.shadowRoot.appendChild(
 					this.makeSiteLink(sites, curIndex + 1)
 				);
 			} else {
-				this.shadowRoot?.appendChild(
+				this.shadowRoot.appendChild(
 					this.makeSiteLink(sites, useIndex)
 				);
 			}
