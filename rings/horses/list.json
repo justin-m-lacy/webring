@@ -3,14 +3,27 @@
 
 		{
 			"url": "www.google.com",
+			"title": "Google",
 			"banner": ""
 		},
 		{
 			"url": "www.reddit.com",
+			"title": "reddit",
 			"banner": ""
 		},
 		{
 			"url": "www.twitter.com",
+			"title": "twitter",
+			"banner": ""
+		},
+		{
+			"url": "localhost",
+			"title": "localhost",
+			"banner": ""
+		},
+		{
+			"url": "www.youtube.com",
+			"title": "youtube",
 			"banner": ""
 		}
 	]

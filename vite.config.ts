@@ -19,7 +19,7 @@ export default async function ({ mode, command }) {
 
   const isProduction = mode === 'production';
 
-  const origins = ["'self'", "*.gitlab.com/justin.lacy/"].join(" ");
+  const origins = ["'self'"].join(" ");
 
   const api_base = getApiBase(process.env.VITE_API_BASE);
 
@@ -32,11 +32,6 @@ export default async function ({ mode, command }) {
     `style-src ${origins} 'unsafe-inline'`,
   ];
 
-  /**
-   * Sample variable exposed to final code.
-   */
-  const buildVariable = 123;
-
   return defineConfig({
 
     base: './',
@@ -48,8 +43,7 @@ export default async function ({ mode, command }) {
     },
 
     define: {
-      /// @note The quotes around the variable value are necessary.
-      "import.meta.env.build_variable": `"${buildVariable}"`
+      /// @note quotes around defined variable values are necessary.
     },
 
     plugins: [
