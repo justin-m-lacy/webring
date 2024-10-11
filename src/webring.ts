@@ -120,12 +120,18 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 			const prevLink = this.makeSiteLink(sites, useIndex - 1);
 			this.shadowRoot?.appendChild(prevLink);
+
 			if (curIndex !== null) {
 				this.shadowRoot?.appendChild(this.makeSiteLink(sites, curIndex));
+				this.shadowRoot?.appendChild(
+					this.makeSiteLink(sites, curIndex + 1)
+				);
+			} else {
+				this.shadowRoot?.appendChild(
+					this.makeSiteLink(sites, useIndex)
+				);
 			}
-			this.shadowRoot?.appendChild(
-				this.makeSiteLink(sites, useIndex + 1)
-			);
+
 
 
 		} catch (err) {
