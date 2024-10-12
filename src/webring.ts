@@ -24,15 +24,14 @@ template.innerHTML = `
 .curlink {
 }
 </style>
+<div class="base">
 <slot name="prevsite">
-<a class="weblink" href="{{url}}">{{ title}}</a>
-</slot>
-<slot name="cursite">
 <a class="weblink" href="{{url}}">{{ title}}</a>
 </slot>
 <slot name="nextsite">
 <a class="weblink" href="{{url}}">{{ title}}</a>
-</slot>`;
+</slot>
+</div>`;
 
 /// Variable placeholder in slots.
 const varRegex = /\{\{\s*(\w+)\s*\}\}/g
@@ -42,11 +41,16 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	//private abort?: AbortSignal | null = null;
 
-	private prevSite: SiteData | null = null;
-	private curSite: SiteData | null = null;
-	private nextSite: SiteData | null = null;
-
 	private sites: SiteData[] | null = null;
+
+	prevSite: SiteData | null = null;
+
+	nextSite: SiteData | null = null;
+
+	/**
+	 * Node holding the <webring> template.
+	 */
+	private templateNode: Node | null = null;
 
 	private url: string | null = null;
 
@@ -56,11 +60,8 @@ customElements.define('myth-ring', class extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot!.addEventListener('slotchange', (evt: Event) => {
 
-			console.log(`slot changed: ${evt.target}`);
-			console.dir(evt.target);
-			console.log(`slot name: ${(evt.target as HTMLElement).innerHTML}`)
-
-
+			const slot = evt.target as HTMLSlotElement;
+			console.log(`slot changed: ${slot.name}`);
 		});
 
 	}
@@ -73,6 +74,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		} else if (name === 'url') {
 
+			console.log(`url changed: ${oldValue}->${newValue}`);
 			this.url = newValue;
 			this.fetchLinksAndUpdate()
 
@@ -80,16 +82,15 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
+	private cloneTemplate() {
+		this.templateNode ??= this.shadowRoot?.appendChild(
+			template.content.cloneNode(true)
+		) ?? null;
+	}
+
 	connectedCallback() {
 
-		const base = this.shadowRoot!.appendChild(
-			template.content.cloneNode(true)
-		) as HTMLElement;
-
-		base.classList.add('base');
-
 		this.url = this.getAttribute('url');
-
 		if (this.url != null) {
 			this.fetchLinksAndUpdate();
 		}
@@ -128,7 +129,12 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
-	private getCurSiteIndex(sites: SiteData[]) {
+	/**
+	 * Get index of currently viewed site.
+	 * @param sites 
+	 * @returns 
+	 */
+	private getMyIndex(sites: SiteData[]) {
 
 		const indexKey = this.getAttribute("index") ?? window.origin;
 		let index = Number(indexKey);
@@ -138,63 +144,71 @@ customElements.define('myth-ring', class extends HTMLElement {
 			return index >= 0 ? index : null;
 
 		} else {
+			/// negative mod.
 			return index;
 		}
 
 	}
 
-	private setSiteLink(slot: 'prevsite' | 'cursite' | 'nextsite', index: number) {
+	private setSiteLink(slot: 'prevsite' | 'nextsite', site: SiteData | null) {
 
-		const sites = this.sites;
-		if (!sites) return;
-
-		index = index % sites.length;
-		if (index < 0) {
-			index = (index + sites.length) % sites.length;
-		}
-		const site = sites[index];
 		const elm = this.shadowRoot!.querySelector(`slot[name="${slot}"]`) as HTMLElement;
+		if (site === null) {
+			elm.innerHTML = '';
+		} else if (elm.textContent) {
+			elm.innerHTML = elm.innerHTML.replace(varRegex, (substr, grp1, ...args) => {
 
-		if (elm.textContent) {
-			elm.textContent.replace(varRegex, (substr, ...args) => {
-
-				if (substr in site) {
-					return site[substr as keyof SiteData] ?? '';
+				if (grp1 === 'title') return site.title ?? site.url;
+				else if (grp1 in site) {
+					return site[grp1 as keyof SiteData] ?? '';
 				}
 				return substr;
 
 			})
 		}
 
+	}
 
-		/*const elm = document.createElement('a');
-		elm.classList.add('weblink')
-		elm.href = site.url;
-		elm.innerText = `${site.title ?? site.url}`;*/
+	private setSiteIndices() {
+
+		const sites = this.sites;
+		if (!sites) return;
+
+		const curIndex = this.getMyIndex(sites);
+		const count = sites.length;
+
+		// If current site not found in ring, use random index.
+		let index = curIndex !== null ?
+			curIndex - 1 : Math.floor(Math.random() * count);
+		/// negative block
+		index = ((index % count) + count) % count;
+
+		this.prevSite = sites[index];
+		/// skip current site.
+		if (curIndex !== null) index = (index + 1) % count;
+		this.nextSite = sites[index];
 
 	}
 
 	async fetchLinksAndUpdate() {
 
-		const sites = this.sites = await this.fetchListData();
+		this.sites = await this.fetchListData();
 
-		if (!sites || !this.shadowRoot) return;
+		if (!this.sites || !this.shadowRoot) return;
 
 		try {
 
-			const curIndex = this.getCurSiteIndex(sites);
-			// Current site might not be in the webring.
-			// Show random prev/next links.
-			const useIndex = curIndex !== null ?
-				curIndex : Math.floor(Math.random() * sites.length);
+			setTimeout(() => {
 
-			this.setSiteLink('prevsite', useIndex - 1);
+				console.log(`setting INDEXES`);
+				this.cloneTemplate();
+				this.setSiteIndices();
+				console.log(`CHANGING SLOTS`);
+				this.setSiteLink('prevsite', this.prevSite);
+				this.setSiteLink('nextsite', this.nextSite);
 
-			if (curIndex !== null) {
-				this.setSiteLink('cursite', curIndex)
-			}
 
-			this.setSiteLink('nextsite', curIndex !== null ? curIndex + 1 : useIndex)
+			}, 1000);
 
 
 		} catch (err) {
@@ -204,7 +218,10 @@ customElements.define('myth-ring', class extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		console.log(`webring disconnected`);
+		this.prevSite = null;
+		this.nextSite = null;
+		this.templateNode = null;
+		this.sites = null;
 	}
 
 });
