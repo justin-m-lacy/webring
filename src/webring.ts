@@ -1,3 +1,4 @@
+import list from "../rings/test/list.json";
 
 type WebringData = {
 	sites: SiteData[]
@@ -22,31 +23,65 @@ template.innerHTML = `
 }
 .curlink {
 }
-</style>`;
+</style>
+<slot name="prevsite">
+<a class="weblink" href="{{url}}">{{ title}}</a>
+</slot>
+<slot name="cursite">
+<a class="weblink" href="{{url}}">{{ title}}</a>
+</slot>
+<slot name="nextsite">
+<a class="weblink" href="{{url}}">{{ title}}</a>
+</slot>`;
 
+/// Variable placeholder in slots.
+const varRegex = /\{\{\s*(\w+)\s*\}\}/g
 customElements.define('myth-ring', class extends HTMLElement {
 
 	static observedAttributes = ["url"];
 
 	//private abort?: AbortSignal | null = null;
 
+	private prevSite: SiteData | null = null;
+	private curSite: SiteData | null = null;
+	private nextSite: SiteData | null = null;
+
+	private sites: SiteData[] | null = null;
+
 	private url: string | null = null;
 
 	constructor() {
 		super();
+
+		this.attachShadow({ mode: 'open' });
+		this.shadowRoot!.addEventListener('slotchange', (evt: Event) => {
+
+			console.log(`slot changed: ${evt.target}`);
+			console.dir(evt.target);
+			console.log(`slot name: ${(evt.target as HTMLElement).innerHTML}`)
+
+
+		});
+
 	}
 
 	attributeChangedCallback(name: string, oldValue: any, newValue: any) {
 
-		if (name === 'url') {
+		if (oldValue == newValue) return;
+
+		if (name === 'index') {
+
+		} else if (name === 'url') {
+
 			this.url = newValue;
+			this.fetchLinksAndUpdate()
+
 		}
 
 	}
 
 	connectedCallback() {
 
-		this.attachShadow({ mode: 'open' });
 		const base = this.shadowRoot!.appendChild(
 			template.content.cloneNode(true)
 		) as HTMLElement;
@@ -63,6 +98,8 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	async fetchListData() {
 
+		return list.sites;
+
 		try {
 
 			if (!this.url) return null;
@@ -71,7 +108,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 			headers.append('Accept', 'text/plain');
 
 			const resp = await fetch(
-				this.url,
+				this.url!,
 				{
 					method: 'get',
 					headers,
@@ -91,7 +128,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
-	private getSiteIndex(sites: SiteData[]) {
+	private getCurSiteIndex(sites: SiteData[]) {
 
 		const indexKey = this.getAttribute("index") ?? window.origin;
 		let index = Number(indexKey);
@@ -106,55 +143,58 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
-	private makeSiteLink(sites: SiteData[], index: number) {
+	private setSiteLink(slot: 'prevsite' | 'cursite' | 'nextsite', index: number) {
+
+		const sites = this.sites;
+		if (!sites) return;
 
 		index = index % sites.length;
 		if (index < 0) {
 			index = (index + sites.length) % sites.length;
 		}
 		const site = sites[index];
+		const elm = this.shadowRoot!.querySelector(`slot[name="${slot}"]`) as HTMLElement;
 
-		const elm = document.createElement('a');
+		if (elm.textContent) {
+			elm.textContent.replace(varRegex, (substr, ...args) => {
+
+				if (substr in site) {
+					return site[substr as keyof SiteData] ?? '';
+				}
+				return substr;
+
+			})
+		}
+
+
+		/*const elm = document.createElement('a');
 		elm.classList.add('weblink')
 		elm.href = site.url;
-		elm.innerText = `${site.title ?? site.url}`;
-
-		return elm;
+		elm.innerText = `${site.title ?? site.url}`;*/
 
 	}
 
 	async fetchLinksAndUpdate() {
 
-		const sites = await this.fetchListData();
+		const sites = this.sites = await this.fetchListData();
 
 		if (!sites || !this.shadowRoot) return;
 
 		try {
 
-			const curIndex = this.getSiteIndex(sites);
+			const curIndex = this.getCurSiteIndex(sites);
 			// Current site might not be in the webring.
 			// Show random prev/next links.
 			const useIndex = curIndex !== null ?
 				curIndex : Math.floor(Math.random() * sites.length);
 
-			const prevLink = this.makeSiteLink(sites, useIndex - 1);
-			this.shadowRoot.appendChild(prevLink);
+			this.setSiteLink('prevsite', useIndex - 1);
 
 			if (curIndex !== null) {
-				const curSite = this.shadowRoot.appendChild(
-					this.makeSiteLink(sites, curIndex)
-				);
-				curSite.classList.add('curlink');
-
-				this.shadowRoot.appendChild(
-					this.makeSiteLink(sites, curIndex + 1)
-				);
-			} else {
-				this.shadowRoot.appendChild(
-					this.makeSiteLink(sites, useIndex)
-				);
+				this.setSiteLink('cursite', curIndex)
 			}
 
+			this.setSiteLink('nextsite', curIndex !== null ? curIndex + 1 : useIndex)
 
 
 		} catch (err) {
