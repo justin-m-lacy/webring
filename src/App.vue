@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 const curIndex = ref(0);
-const displayProp = ref('title');
 const myRing = ref<HTMLElement>();
 
 onMounted(() => {
@@ -9,7 +8,6 @@ onMounted(() => {
 	setTimeout(() => {
 
 		curIndex.value = 2;
-		displayProp.value = 'url';
 
 		/*const anchor = document.createElement('a');
 		anchor.slot = 'prevsite';
