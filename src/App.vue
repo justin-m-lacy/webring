@@ -7,7 +7,6 @@ onMounted(() => {
 
 	setTimeout(() => {
 
-		curIndex.value = 2;
 
 		/*const anchor = document.createElement('a');
 		anchor.slot = 'prevsite';
@@ -29,7 +28,7 @@ onMounted(() => {
 <template>
 	<div>
 		<div>Webring Test</div>
-		<myth-ring ref="myRing" :index="curIndex">
-		</myth-ring>
+		<!--<myth-ring ref="myRing" :index="curIndex">
+		</myth-ring>-->
 	</div>
 </template>

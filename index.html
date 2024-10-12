@@ -17,11 +17,16 @@
   
 
   <script type="module" src="./src/index.ts" defer></script>
-  <!--<myth-ring></myth-ring>-->
-  <!--<myth-ring>
-    <a slot="prevsite" style="background:rgb(184, 184, 211)" href="{{url}}">{{title}}</a>
-    <a slot="nextsite" style="background: rgb(218, 184, 184);" href="{{url}}">{{title}}</a>
-  </myth-ring>-->
+  <myth-ring>
+  <div slot="prevsite">
+    <span>{{title}}:</span>
+    <a href="{{url}}">{{title}}</a>
+    </div>
+    <div slot="nextsite">
+      <span>GO NEXT:</span>
+      <a href="{{url}}">{{title}}</a>
+      </div>
+  </myth-ring>
 
 </body>
 

@@ -47,6 +47,10 @@ export default async function ({ mode, command }) {
       /// @note quotes around defined variable values are necessary.
     },
 
+    build: {
+      outDir: 'sample',
+    },
+
     plugins: [
 
       vue({

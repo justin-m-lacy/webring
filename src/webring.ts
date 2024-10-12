@@ -7,32 +7,31 @@ type WebringData = {
 type SiteData = {
 	url: string,
 	title?: string,
+	icon?: string,
 	creator?: string,
 	banner?: string,
 }
 
 
 const linkTemplate = document.createElement('template');
-linkTemplate.innerHTML = '<a class="weblink" href="{{url}}">{{title}}</a>';
+linkTemplate.innerHTML = '<a class="weblink" part="link" href="{{url}}">{{title}}</a>';
 
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
-.hide {
-display:none;
-}
-.base {
+.hide {display:none;}
+:host {
 	display:flex;
-	justify-content: space-evenly;
-}
-.weblink {
-	padding:8px 0;
+	width: 80%;
+	border: 1px solid black;
+	border-radius: 8px;
+	padding: 8px 0;
+	gap: 32px;
+	justify-content: center;
 }
 </style>
-<div class="base">
 <slot name="prevsite"></slot>
-<slot name="nextsite"></slot>
-</div>`;
+<slot name="nextsite"></slot>`;
 
 /// Variable placeholder in slots.
 const slotVarRegex = /\{\{\s*(\w+)\s*\}\}/g
@@ -75,6 +74,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 			if (!this.isConnected || !this.sites) return;
 			const slot = evt.target as HTMLSlotElement;
+
 			if (slot.name === 'prevsite' || slot.name === 'nextsite') {
 				this.setSiteLink(slot.name);
 			}
