@@ -73,7 +73,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		this.attachShadow({ mode: 'open' });
 		if (!this.shadowRoot) {
-			console.warn(`webring: missing shadowRoot`);
+			console.warn(`webring missing root`);
 			return;
 		}
 
@@ -228,15 +228,15 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		if (!this.isConnected || !this.sites) return;
 
-		setTimeout(async () => {
+		//setTimeout(async () => {
 
-			console.log(`REFRESH LINKS:`);
-			this.setSiteIndices();
-			this.setSiteLink('prevsite');
-			this.setSiteLink('nextsite');
+		console.log(`REFRESH LINKS:`);
+		this.setSiteIndices();
+		this.setSiteLink('prevsite');
+		this.setSiteLink('nextsite');
 
 
-		}, 1000);
+		//}, 1000);
 
 	}
 

@@ -4,10 +4,10 @@ const curIndex = ref(0);
 
 onMounted(() => {
 
-	/*setTimeout(() => {
+	setTimeout(() => {
 
 		curIndex.value = 2;
-	}, 4000);*/
+	}, 3000);
 
 });
 
@@ -16,7 +16,7 @@ onMounted(() => {
 <template>
 	<div>
 		<div>Webring Test</div>
-		<!--<myth-ring url="temp" :index="curIndex">
-		</myth-ring>-->
+		<myth-ring url="temp" :index="curIndex">
+		</myth-ring>
 	</div>
 </template>
