@@ -35,6 +35,7 @@ export default async function ({ mode, command }) {
   return defineConfig({
 
     base: './',
+
     resolve: {
       alias: [
         { find: /^@\//, replacement: `${resolve(__dirname, './src')}/` },
@@ -48,6 +49,14 @@ export default async function ({ mode, command }) {
 
     plugins: [
 
+      vue({
+
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => tag.includes('myth-ring')
+          }
+        }
+      }),
       createHtmlPlugin({
         inject: {
           data: {
@@ -55,7 +64,6 @@ export default async function ({ mode, command }) {
           },
         },
       }),
-      vue(),
 
       // auto-import listed packages
       autoImport({

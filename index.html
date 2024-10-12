@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <!--<link rel="shortcut icon" href="./public/favicon.png">-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <script type="module" src="./src/webring.ts"></script>
   <meta http-equiv="X-Content-Security-Policy" content="<%= contentSecurityPolicy %>" />
   <title>
     Sample Webring Website
@@ -14,9 +14,14 @@
 
 <body>
   <div id="app">Website Content</div>
-  <script type="module" src="./src/webring.ts" defer></script>
-  <myth-ring 
-    url="https://raw.githubusercontent.com/justin-m-lacy/webring/refs/heads/main/rings/horses/list.json"/>
+  
+
+  <script type="module" src="./src/index.ts" defer></script>
+  <myth-ring url="test"></myth-ring>
+  <!--<myth-ring url="test">
+    <a slot="prevsite" style="background:rgb(184, 184, 211)" href="{{url}}">{{url}}</a>
+    <a slot="nextsite" style="background: rgb(218, 184, 184);" href="{{url}}">{{url}}</a>
+  </myth-ring>-->
 
 </body>
 

@@ -11,33 +11,33 @@ type SiteData = {
 	banner?: string,
 }
 
+const linkTemplate = document.createElement('template');
+linkTemplate.innerHTML = '<a class="weblink" href="{{url}}">{{title}}</a>';
+
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
+.hide {
+display:none;
+}
 .base {
-	display: flex;
+	display:flex;
 	justify-content: space-evenly;
 }
 .weblink {
 	padding:8px 0;
 }
-.curlink {
-}
 </style>
 <div class="base">
-<slot name="prevsite">
-<a class="weblink" href="{{url}}">{{ title}}</a>
-</slot>
-<slot name="nextsite">
-<a class="weblink" href="{{url}}">{{ title}}</a>
-</slot>
+<slot name="prevsite"></slot>
+<slot name="nextsite"></slot>
 </div>`;
 
 /// Variable placeholder in slots.
-const varRegex = /\{\{\s*(\w+)\s*\}\}/g
+const slotVarRegex = /\{\{\s*(\w+)\s*\}\}/g
 customElements.define('myth-ring', class extends HTMLElement {
 
-	static observedAttributes = ["url"];
+	static observedAttributes = ["url", "index"];
 
 	//private abort?: AbortSignal | null = null;
 
@@ -47,23 +47,8 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	nextSite: SiteData | null = null;
 
-	/**
-	 * Node holding the <webring> template.
-	 */
-	private templateNode: Node | null = null;
-
-	private url: string | null = null;
-
 	constructor() {
 		super();
-
-		this.attachShadow({ mode: 'open' });
-		this.shadowRoot!.addEventListener('slotchange', (evt: Event) => {
-
-			const slot = evt.target as HTMLSlotElement;
-			console.log(`slot changed: ${slot.name}`);
-		});
-
 	}
 
 	attributeChangedCallback(name: string, oldValue: any, newValue: any) {
@@ -72,44 +57,71 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		if (name === 'index') {
 
+			console.log(`index changed: ${newValue}`);
+			this.refreshLinks();
+
 		} else if (name === 'url') {
 
-			console.log(`url changed: ${oldValue}->${newValue}`);
-			this.url = newValue;
-			this.fetchLinksAndUpdate()
+			console.log(`URLCHANGED changed: ${oldValue}->${newValue}`);
+			this.fetchSiteList().then(() => this.refreshLinks());
 
 		}
 
-	}
-
-	private cloneTemplate() {
-		this.templateNode ??= this.shadowRoot?.appendChild(
-			template.content.cloneNode(true)
-		) ?? null;
 	}
 
 	connectedCallback() {
 
-		this.url = this.getAttribute('url');
-		if (this.url != null) {
-			this.fetchLinksAndUpdate();
+		this.attachShadow({ mode: 'open' });
+		if (!this.shadowRoot) {
+			console.warn(`webring: missing shadowRoot`);
+			return;
+		}
+
+		this.shadowRoot.appendChild(
+			template.content.cloneNode(true)
+		);
+
+		const slots = this.shadowRoot.querySelector('slot');
+		console.log(`initial slots: ${slots?.assignedElements().length}`)
+
+		let count = 0;
+		this.shadowRoot.addEventListener('slotchange', (evt: Event) => {
+
+			console.log(`SLOT UPDATED: ${this.isConnected}`);
+
+			if (!this.isConnected || !this.sites) return;
+
+
+			const slot = evt.target as HTMLSlotElement;
+			count++;
+
+			if (count > 20) return;
+			if (slot.name === 'prevsite' || slot.name === 'nextsite') {
+				this.setSiteLink(slot.name);
+			}
+
+		});
+
+		if (this.sites) {
+			this.refreshLinks();
 		}
 
 	}
 
-	async fetchListData() {
+	async fetchSiteList() {
 
-		return list.sites;
+		this.sites = list.sites;
+		return;
 
 		try {
-
-			if (!this.url) return null;
+			const url = this.getAttribute('url');
+			if (!url) return null;
 
 			const headers = new Headers();
 			headers.append('Accept', 'text/plain');
 
 			const resp = await fetch(
-				this.url!,
+				url!,
 				{
 					method: 'get',
 					headers,
@@ -150,21 +162,43 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
-	private setSiteLink(slot: 'prevsite' | 'nextsite', site: SiteData | null) {
+	private setSiteLink(slotName: 'prevsite' | 'nextsite') {
 
-		const elm = this.shadowRoot!.querySelector(`slot[name="${slot}"]`) as HTMLElement;
-		if (site === null) {
-			elm.innerHTML = '';
-		} else if (elm.textContent) {
-			elm.innerHTML = elm.innerHTML.replace(varRegex, (substr, grp1, ...args) => {
+		const siteData = slotName === 'prevsite' ? this.prevSite : this.nextSite;
+		const slot = this.shadowRoot!.querySelector(`slot[name="${slotName}"]`) as HTMLSlotElement;
 
-				if (grp1 === 'title') return site.title ?? site.url;
-				else if (grp1 in site) {
-					return site[grp1 as keyof SiteData] ?? '';
+		if (siteData === null) {
+			slot.classList.add('hide');
+			return;
+		} else {
+			slot.classList.remove('hide');
+		}
+
+		console.log(`getting site: ${slotName}: DATA: ${siteData.url}`);
+		const replaceVars = (substr: string, grp1: string, ..._: any[]) => {
+			if (grp1 === 'title') return siteData.title ?? siteData.url;
+			else if (grp1 in siteData) {
+				return siteData[grp1 as keyof SiteData] ?? '';
+			}
+			return substr;
+		}
+
+		const assigned = slot.assignedElements();
+		if (assigned.length === 0) {
+
+			slot.innerHTML = '';
+			const linkNode = linkTemplate.content.cloneNode(true);
+			linkNode.childNodes.forEach(elm => {
+				if (elm instanceof HTMLElement) {
+					elm.innerHTML = elm.innerHTML.replace(slotVarRegex, replaceVars);
 				}
-				return substr;
+			});
+			slot.appendChild(linkNode);
 
-			})
+		} else {
+			slot.assignedElements().forEach(elm => {
+				elm.innerHTML = elm.innerHTML.replace(slotVarRegex, replaceVars);
+			});
 		}
 
 	}
@@ -185,42 +219,30 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		this.prevSite = sites[index];
 		/// skip current site.
-		if (curIndex !== null) index = (index + 1) % count;
+		index = curIndex != null ? (index + 1) % count : (index + 2) % count;
 		this.nextSite = sites[index];
 
 	}
 
-	async fetchLinksAndUpdate() {
+	async refreshLinks() {
 
-		this.sites = await this.fetchListData();
+		if (!this.isConnected || !this.sites) return;
 
-		if (!this.sites || !this.shadowRoot) return;
+		setTimeout(async () => {
 
-		try {
-
-			setTimeout(() => {
-
-				console.log(`setting INDEXES`);
-				this.cloneTemplate();
-				this.setSiteIndices();
-				console.log(`CHANGING SLOTS`);
-				this.setSiteLink('prevsite', this.prevSite);
-				this.setSiteLink('nextsite', this.nextSite);
+			console.log(`REFRESH LINKS:`);
+			this.setSiteIndices();
+			this.setSiteLink('prevsite');
+			this.setSiteLink('nextsite');
 
 
-			}, 1000);
-
-
-		} catch (err) {
-			console.warn(`webring data failed to load: ${err}`);
-		}
+		}, 1000);
 
 	}
 
 	disconnectedCallback() {
 		this.prevSite = null;
 		this.nextSite = null;
-		this.templateNode = null;
 		this.sites = null;
 	}
 
