@@ -1,4 +1,4 @@
-const DEFAULT_RING_URL = 'https://raw.githubusercontent.com/justin-m-lacy/webring/refs/heads/main/rings/test/sites.json';
+const DEFAULT_RING_URL = 'https://okprco.com/webring/rings/test/sites.json';
 
 type WebringData = {
 	sites: SiteData[]
@@ -71,7 +71,6 @@ customElements.define('myth-ring', class extends HTMLElement {
 		this.shadowRoot.appendChild(
 			template.content.cloneNode(true)
 		);
-
 		this.shadowRoot.addEventListener('slotchange', (evt: Event) => {
 
 			if (!this.isConnected || !this.sites) return;
@@ -215,7 +214,7 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	}
 
-	async refreshLinks() {
+	refreshLinks() {
 
 		if (!this.isConnected || !this.sites) return;
 
