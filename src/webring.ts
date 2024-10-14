@@ -34,6 +34,23 @@ template.innerHTML = `
 <slot name="cursite"></slot>
 <slot name="nextsite"></slot>`;
 
+const sanitizeResults = (sites: Partial<SiteData>[] | null | undefined) => {
+
+	const results: SiteData[] = [];
+	if (sites == null || sites.length === 0) return results;
+
+	for (const site of sites) {
+
+		if (!site || !site.url || typeof site.url !== 'string') continue;
+		if (!site.url.startsWith('http')) site.url = "https://" + site.url;
+		results.push(site as SiteData);
+
+	}
+
+	return results;
+
+}
+
 /// Variable placeholder in slots.
 const slotVarRegex = /\{\{\s*(\w+)\s*\}\}/g
 customElements.define('myth-ring', class extends HTMLElement {
@@ -115,10 +132,9 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 				});
 
-			const data = await resp.json() as WebringData;
-			this.sites = data.sites;
+			const data = await resp.json() as WebringData | null | undefined;
 
-			return data.sites;
+			return sanitizeResults(data?.sites);
 
 		} catch (err) {
 			console.warn(`webring data load failed: ${err}`);
