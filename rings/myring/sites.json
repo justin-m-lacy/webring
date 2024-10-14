@@ -1,0 +1,21 @@
+{
+	"sites": [
+
+		{
+			"url": "https://news.google.com",
+			"title": "News",
+			"banner": ""
+		},
+		{
+			"url": "https://duckduckgo.com/",
+			"title": "Duck Duck Go",
+			"banner": ""
+		},
+		{
+			"url": "https://www.merriam-webster.com/",
+			"title": "Dictionary",
+			"banner": ""
+		}
+	]
+
+}

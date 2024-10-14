@@ -31,6 +31,7 @@ template.innerHTML = `
 }
 </style>
 <slot name="prevsite"></slot>
+<slot name="cursite"></slot>
 <slot name="nextsite"></slot>`;
 
 /// Variable placeholder in slots.
@@ -41,9 +42,13 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 	private sites: SiteData[] | null = null;
 
+	private curSite: SiteData | null = null;
+
 	private prevSite: SiteData | null = null;
 
 	private nextSite: SiteData | null = null;
+
+	private slotsCount: number = 3;
 
 	private slotsUpdating = 0;
 
@@ -70,12 +75,14 @@ customElements.define('myth-ring', class extends HTMLElement {
 		this.shadowRoot.appendChild(
 			template.content.cloneNode(true)
 		);
+		this.slotsCount = this.shadowRoot.querySelectorAll("slot").length;
+
 		this.shadowRoot.addEventListener('slotchange', (evt: Event) => {
 
 			if (!this.isConnected || !this.sites) return;
 			const slot = evt.target as HTMLSlotElement;
 
-			if (slot.name === 'prevsite' || slot.name === 'nextsite') {
+			if (slot.name === 'prevsite' || slot.name === 'nextsite' || slot.name === 'cursite') {
 				this.setSiteLink(slot.name);
 			}
 
@@ -135,21 +142,24 @@ customElements.define('myth-ring', class extends HTMLElement {
 			return index >= 0 ? index : null;
 
 		} else {
-			/// negative mod.
 			return index;
 		}
 
 	}
 
-	private setSiteLink(slotName: 'prevsite' | 'nextsite') {
+	private setSiteLink(slotName: 'prevsite' | 'nextsite' | 'cursite') {
 
-		if (this.slotsUpdating >= 2) return;
+		// block slotchange infinite update loop.
+		if (this.slotsUpdating >= this.slotsCount) return;
 		this.slotsUpdating++;
-		setTimeout(() => {
-			this.slotsUpdating = 0;
-		});
+		if (this.slotsUpdating === 1) {
+			setTimeout(() => {
+				this.slotsUpdating = 0;
+			});
+		}
 
-		const siteData = slotName === 'prevsite' ? this.prevSite : this.nextSite;
+		const siteData = slotName === 'prevsite' ? this.prevSite :
+			(slotName === 'cursite' ? this.curSite : this.nextSite);
 		const slot = this.shadowRoot!.querySelector(`slot[name="${slotName}"]`) as HTMLSlotElement;
 
 		if (siteData === null) {
@@ -204,12 +214,20 @@ customElements.define('myth-ring', class extends HTMLElement {
 		// If current site not found in ring, use random index.
 		let index = curIndex !== null ?
 			curIndex - 1 : Math.floor(Math.random() * count);
+
 		/// negative block
 		index = ((index % count) + count) % count;
 
 		this.prevSite = sites[index];
-		/// skip current site.
-		index = curIndex != null ? (index + 1) % count : (index + 2) % count;
+		index = (index + 1) % count;
+
+		if (curIndex !== null) {
+			this.curSite = sites[index];
+			index = (index + 1) % count;
+		} else {
+			this.curSite = null;
+		}
+
 		this.nextSite = sites[index];
 
 	}
@@ -220,12 +238,14 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 		this.setSiteIndices();
 		this.setSiteLink('prevsite');
+		this.setSiteLink('cursite');
 		this.setSiteLink('nextsite');
 
 	}
 
 	disconnectedCallback() {
 		this.prevSite = null;
+		this.curSite = null;
 		this.nextSite = null;
 		this.sites = null;
 	}
