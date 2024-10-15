@@ -144,17 +144,17 @@ customElements.define('myth-ring', class extends HTMLElement {
 	}
 
 	/**
-	 * Get index of currently viewed site.
+	 * Get index of this (current) site.
 	 * @param sites 
 	 * @returns 
 	 */
 	private getMyIndex(sites: SiteData[]) {
 
-		const indexKey = this.getAttribute("index") ?? window.origin;
+		const indexKey = this.getAttribute("index") ?? document.URL;
 		let index = Number(indexKey);
 		if (Number.isNaN(index)) {
 
-			index = sites.findIndex(v => v.url === indexKey);
+			index = sites.findIndex(v => v.url.includes(indexKey));
 			return index >= 0 ? index : null;
 
 		} else {
