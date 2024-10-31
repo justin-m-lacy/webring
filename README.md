@@ -54,8 +54,6 @@ the corresponding webring site data.
 
 ## Compiling `<myth-ring>` Web Component:
 
-
-
 run `npm i` to install required js modules.
 
 run `npm run build` to build and minify the webring.ts source.
@@ -63,3 +61,14 @@ run `npm run build` to build and minify the webring.ts source.
 File is output to `dist/webring.js`
 
 
+# Run Sample Project
+
+Codebase includes a sample webpage that loads a webring.
+
+Run with:
+
+`pnpm dev`
+
+Build sample website with:
+
+`pnpm build-sample`

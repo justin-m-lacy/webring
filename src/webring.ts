@@ -136,10 +136,6 @@ customElements.define('myth-ring', class extends HTMLElement {
 				});
 
 			const data = await resp.json() as WebringData | null | undefined;
-
-			console.log(`loaded site list...`);
-			console.dir(data);
-
 			this.sites = sanitizeResults(data?.sites);
 
 		} catch (err) {
@@ -156,14 +152,14 @@ customElements.define('myth-ring', class extends HTMLElement {
 	 */
 	private getMyIndex(sites: SiteData[]) {
 
-		const indexKey = this.getAttribute("index") ?? document.URL;
-
-		console.log(`document: ${document.URL}`);
+		const indexKey =
+			(this.getAttribute("index") ?? document.URL).toLowerCase();
 
 		let index = Number(indexKey);
+
 		if (Number.isNaN(index)) {
 
-			index = sites.findIndex(v => v.url.includes(indexKey));
+			index = sites.findIndex(v => indexKey.includes(v.url));
 			return index >= 0 ? index : null;
 
 		} else {
@@ -190,10 +186,9 @@ customElements.define('myth-ring', class extends HTMLElement {
 		if (siteData === null) {
 			slot.classList.add('hide');
 			return;
-		} else {
-			slot.classList.remove('hide');
 		}
 
+		slot.classList.remove('hide');
 
 		//console.log(`getting site: ${slotName}: DATA: ${siteData.url}`);
 		const replaceVars = (substr: string, grp1: string, ..._: any[]) => {
