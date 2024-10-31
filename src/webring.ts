@@ -108,7 +108,10 @@ customElements.define('myth-ring', class extends HTMLElement {
 		if (this.sites) {
 			this.refreshLinks();
 		} else if (!this.getAttribute('url')) {
-			this.fetchSiteList(DEFAULT_RING_URL).then(() => this.refreshLinks());
+			/// url attribute would load on attribute changed.
+			this.fetchSiteList(DEFAULT_RING_URL).then(() => {
+				this.refreshLinks()
+			});
 
 		}
 
@@ -134,7 +137,10 @@ customElements.define('myth-ring', class extends HTMLElement {
 
 			const data = await resp.json() as WebringData | null | undefined;
 
-			return sanitizeResults(data?.sites);
+			console.log(`loaded site list...`);
+			console.dir(data);
+
+			this.sites = sanitizeResults(data?.sites);
 
 		} catch (err) {
 			console.warn(`webring data load failed: ${err}`);
@@ -151,6 +157,9 @@ customElements.define('myth-ring', class extends HTMLElement {
 	private getMyIndex(sites: SiteData[]) {
 
 		const indexKey = this.getAttribute("index") ?? document.URL;
+
+		console.log(`document: ${document.URL}`);
+
 		let index = Number(indexKey);
 		if (Number.isNaN(index)) {
 

@@ -4,6 +4,12 @@
 
 The `<myth-ring>` web component will insert the webring links into your website.
 
+To use the <myth-ring> web component, it must be served from a location your website has access to, and loaded into your webpage.
+
+`<script type="module" src="http://code-host/path-to-webring-code/webring.js"></script>`
+
+`<myth-ring></webring>`
+
 ## url
 
 Use the `<myth-ring>` `url` attribute to set the location of your webring's site data:
@@ -47,6 +53,8 @@ Within the slotted element, text escaped with `{{ prop }}` will be replaced with
 the corresponding webring site data.
 
 ## Compiling `<myth-ring>` Web Component:
+
+
 
 run `npm i` to install required js modules.
 
