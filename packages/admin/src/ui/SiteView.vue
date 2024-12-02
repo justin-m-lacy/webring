@@ -8,6 +8,7 @@ const props = defineProps<{
 </script>
 <template>
 	<div>
+		<div><span>id:</span><span>{{ site.id }}</span></div>
 		<div><a :href="site.url">{{ site.url }}</a></div>
 		<div>{{ site.title || 'No title' }}</div>
 		<div>{{ site.banner || 'No banner' }}</div>

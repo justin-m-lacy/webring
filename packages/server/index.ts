@@ -1,29 +1,76 @@
-import Express from "express";
-import { loadRing } from "./src/ring-load";
-import { WebringData } from "./src/webring";
+import Express from 'express';
+import { loadRingList } from './src/ring-load';
+import { useRingStore } from "./src/ring-store";
 
-
-const webringCache = new Map<string, WebringData>();
+const ringStore = useRingStore();
 
 const app = Express();
 const port = 3000;
 
 if (process.env.DEFAULT_RING) {
-	try {
-		const webring = await loadRing(process.env.DEFAULT_RING);
-		webringCache.set(process.env.DEFAULT_RING, webring);
-	} catch (err) {
-		console.error(err);
-	}
+	ringStore.getOrLoad(process.env.DEFAULT_RING);
 }
 
-app.get('/rings/:ringid/', (req, res) => {
-	//req.params.id;
+app.use(Express.urlencoded());
+app.use(Express.json());
+
+app.all('/rings/:ringid', (req, res, next) => {
+
+	const ringId = req.params.ringid;
+	if (!ringId || typeof ringId !== 'string' || ringId.length > 100) {
+		res.sendStatus(400);
+	} else {
+		next();
+	}
+
+});
+
+app.all('/rings/:ringid/sites/:site', (req, res, next) => {
+	const siteId = req.params.site;
+	if (!siteId || typeof siteId !== 'string' || siteId.length > 100) {
+		res.sendStatus(400);
+	} else {
+		next();
+	}
+});
+
+app.get('/rings', async (req, res) => {
+
+	const list = await loadRingList();
+	res.json({
+		rings: list
+	});
+
+});
+
+app.get('/rings/:ringid', async (req, res) => {
+
+	const ring = await ringStore.getOrLoad(req.params.ringid);
+	if (ring) {
+		res.send({
+			ring: ring
+		});
+	} else {
+		res.sendStatus(404);
+	}
+
 });
 
 
-app.get('/rings/:ringid/sites/:site/', (req, res) => {
-	//req.params.id;
+app.get('/rings/:ringid/sites/:site/', async (req, res) => {
+	const ring = await ringStore.getOrLoad(req.params.ringid);
+	if (ring) {
+
+		const site = ring.sites.find(v => v.url === req.params.site);
+		if (site) {
+			res.send(site);
+		} else {
+			res.sendStatus(404);
+		}
+
+	} else {
+		res.sendStatus(404);
+	}
 });
 
 app.post('/rings/:ringid/sites/:site/', (req, res) => {

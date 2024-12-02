@@ -1,8 +1,30 @@
-import { readFile, writeFile } from 'fs/promises';
+import { readdirSync } from 'fs';
+import { readdir, readFile, writeFile } from 'fs/promises';
+import { basename, extname } from 'path';
 import { WebringData } from './webring';
 
 /// loads in progress to avoid duplicate loads.
 const loads = new Map<string, Promise<Buffer>>();
+
+export async function loadRingList(): Promise<string[]> {
+
+	const entries = await readdir('./rings', { withFileTypes: true });
+
+	return entries.filter(
+		f => f.isFile() && extname(f.name) === 'json'
+	).map(f => basename(f.name, '.json'));
+
+}
+
+export function loadRingListSync(): string[] {
+
+	const entries = readdirSync('./rings', { withFileTypes: true });
+
+	return entries.filter(
+		f => f.isFile() && extname(f.name) === 'json'
+	).map(f => basename(f.name, '.json'));
+
+}
 
 export async function loadRing(ringId: string): Promise<WebringData> {
 

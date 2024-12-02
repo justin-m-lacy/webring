@@ -3,6 +3,7 @@ export type WebringData = {
 }
 
 export type SiteData = {
+	id: string,
 	url: string,
 	title?: string,
 	icon?: string,
