@@ -1,10 +1,14 @@
-import { loadRingList } from "./ring-load";
+import { createNewRing, loadRingList } from "./ring-io";
 
 let webringsStore: ReturnType<typeof createStore> | null = null;
 
 const createStore = () => {
 
 	let ringsList: null | string[] = null;
+
+	const create = async (ringId: string) => {
+		await createNewRing(ringId);
+	}
 
 	const load = async () => {
 		return (ringsList = await loadRingList());

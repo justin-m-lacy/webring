@@ -1,4 +1,4 @@
-import { loadRing, writeRing } from "./ring-load";
+import { loadRing, writeRing } from "./ring-io";
 import { WebringData } from "./webring";
 
 let ringStore: ReturnType<typeof createStore> | null = null;

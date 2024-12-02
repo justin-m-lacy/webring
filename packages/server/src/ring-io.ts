@@ -6,6 +6,8 @@ import { WebringData } from './webring';
 /// loads in progress to avoid duplicate loads.
 const loads = new Map<string, Promise<Buffer>>();
 
+export const getRingFile = (ringId: string) => `./rings/${ringId}.json`;
+
 export async function loadRingList(): Promise<string[]> {
 
 	const entries = await readdir('./rings', { withFileTypes: true });
@@ -39,10 +41,20 @@ export async function loadRing(ringId: string): Promise<WebringData> {
 export async function writeRing(ringId: string, data: WebringData): Promise<boolean> {
 
 	try {
-		await writeFile(`./rings/${ringId}.json`, JSON.stringify(data));
+		await writeFile(getRingFile(ringId), JSON.stringify(data), {
+			flag: 'r+'
+		});
 		return true;
 	} catch (err) {
 		return false;
 	}
+
+}
+
+export async function createNewRing(ringId: string) {
+
+	await writeFile(getRingFile(ringId), JSON.stringify({ sites: [] }), {
+		flag: 'wx'
+	});
 
 }

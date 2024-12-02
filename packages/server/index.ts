@@ -1,5 +1,5 @@
 import Express from 'express';
-import { loadRingList } from './src/ring-load';
+import { loadRingList } from './src/ring-io';
 import { useRingStore } from "./src/ring-store";
 
 const ringStore = useRingStore();
@@ -40,6 +40,12 @@ app.get('/rings', async (req, res) => {
 	res.json({
 		rings: list
 	});
+
+});
+
+app.post('/rings', async (req, res) => {
+
+	const request = req.body;
 
 });
 
