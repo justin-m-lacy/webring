@@ -4,6 +4,9 @@
 	"description": "",
 	"main": "src/index.js",
 	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"dev": "vite",
 		"preview": "vite preview",

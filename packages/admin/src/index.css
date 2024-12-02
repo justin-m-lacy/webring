@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+
+  input[type=text]{
+    background-color: theme(colors.bluez.500)
+  };
+  input:focus {
+    outline:none;
+    outline-width: 0;
+    outline-color: transparent;
+  }
+
+  input[type=number]{
+    -moz-appearance: textfield;
+  }
+
+}
+
+#app {
+  height:100%;
+  width: 100%;
+}
