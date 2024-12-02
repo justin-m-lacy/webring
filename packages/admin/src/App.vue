@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useRingStore } from '@/store/ring-store';
 import { useRingListStore } from './store/ring-list-store';
+import RingView from '@/ui/RingView.vue';
 
 const ringList = useRingListStore();
 const ringStore = useRingStore();
 
 function selectRing(id: string) {
-
+	ringStore.setCur(id);
 }
 
 </script>
@@ -16,5 +17,7 @@ function selectRing(id: string) {
 		<div v-for="id in ringList.webringIds" @click="selectRing(id)" :key="id">
 			{{ id }}
 		</div>
+		<RingView v-if="ringStore.curRing"
+				  :ring="ringStore.curRing" />
 	</div>
 </template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { SiteData } from '../../../types/webring';
+import { SiteData } from '../../../shared/webring';
 
 const props = defineProps<{
 	site: SiteData

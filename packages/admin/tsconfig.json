@@ -24,11 +24,15 @@
       "dom"
     ],
     "paths": {
+      "@shared/*": [
+        "../shared/*"
+      ],
       "@/*": [
         "src/*"
       ],
     },
   },
+  "references": [ ],
   "typeAcquisition": {
     "enable": true
   },
