@@ -1,4 +1,5 @@
 export type WebringData = {
+	id: string,
 	sites: SiteData[]
 }
 

@@ -1,18 +1,18 @@
-import Express from 'express';
+import express from 'express';
 import { loadRingList } from './src/ring-io';
 import { useRingStore } from "./src/ring-store";
 
 const ringStore = useRingStore();
 
-const app = Express();
+const app = express();
 const port = 3000;
 
 if (process.env.DEFAULT_RING) {
 	ringStore.getOrLoad(process.env.DEFAULT_RING);
 }
 
-app.use(Express.urlencoded());
-app.use(Express.json());
+app.use(express.urlencoded());
+app.use(express.json());
 
 app.all('/rings/:ringid', (req, res, next) => {
 
@@ -45,7 +45,8 @@ app.get('/rings', async (req, res) => {
 
 app.post('/rings', async (req, res) => {
 
-	const request = req.body;
+	const ringId = req.body.ringid;
+	ringStore.saveRing
 
 });
 
@@ -88,5 +89,5 @@ app.patch('/rings/:ringid/sites/:site/', (req, res) => {
 });
 
 app.listen(port, () => {
-
+	console.log(`listening port: ${port}`);
 });

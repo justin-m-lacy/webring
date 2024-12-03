@@ -1,7 +1,7 @@
-import { fetchRingData } from "@/api/webrings";
+import { createRing, fetchRingData } from "@/api/webrings";
+import { WebringData } from "@shared/webring";
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { WebringData } from "../../../shared/webring";
 
 export const useRingStore = defineStore('ring', () => {
 
@@ -13,6 +13,16 @@ export const useRingStore = defineStore('ring', () => {
 		const id = curRingId.value;
 		return id ? webrings.value.get(id) : null;
 	});
+
+	const createNew = useDebounceFn(async (ringId: string) => {
+
+		try {
+			const result = await createRing(ringId);
+		} catch (err) {
+			console.error(err);
+		}
+
+	}, 500);
 
 	async function loadRingData(id: string) {
 		try {
@@ -45,7 +55,8 @@ export const useRingStore = defineStore('ring', () => {
 		webrings,
 		curRing,
 		loadRingData,
-		loadCurRing
+		loadCurRing,
+		createNew
 	}
 
 });

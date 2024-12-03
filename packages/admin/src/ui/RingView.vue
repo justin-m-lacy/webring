@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WebringData } from '../../../shared/webring';
+import { WebringData } from '@shared/webring';
 import SiteView from './SiteView.vue';
 
 const props = defineProps<{

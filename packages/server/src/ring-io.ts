@@ -1,7 +1,7 @@
+import { WebringData } from '@shared/webring.js';
 import { readdirSync } from 'fs';
 import { readdir, readFile, writeFile } from 'fs/promises';
 import { basename, extname } from 'path';
-import { WebringData } from './webring';
 
 /// loads in progress to avoid duplicate loads.
 const loads = new Map<string, Promise<Buffer>>();
@@ -51,9 +51,9 @@ export async function writeRing(ringId: string, data: WebringData): Promise<bool
 
 }
 
-export async function createNewRing(ringId: string) {
+export async function createNewRing(ringId: string, data: WebringData) {
 
-	await writeFile(getRingFile(ringId), JSON.stringify({ sites: [] }), {
+	await writeFile(getRingFile(ringId), JSON.stringify(data), {
 		flag: 'wx'
 	});
 

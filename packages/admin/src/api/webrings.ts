@@ -1,4 +1,4 @@
-import { WebringData } from "../../../shared/webring";
+import { WebringData } from "@shared/webring";
 
 const RingHost = import.meta.env.VITE_RING_HOST;
 
@@ -35,7 +35,7 @@ export async function createRing(ringId: string): Promise<true> {
 	const res = await fetch(`${RingHost}/rings`, {
 		method: 'POST',
 		credentials: 'include',
-		body: ringId
+		body: JSON.stringify({ ringid: ringId })
 	});
 
 	if (res.status !== 200) {

@@ -1,14 +1,4 @@
-export type WebringData = {
-	sites: SiteData[]
-}
-
-export type SiteData = {
-	url: string,
-	title?: string,
-	icon?: string,
-	creator?: string,
-	banner?: string,
-}
+import { SiteData, WebringData } from '@shared/webring.js';
 
 export function removeSite(ring: WebringData, url: string) {
 
@@ -39,8 +29,12 @@ export function updateSite(ring: WebringData, target: string, values: Partial<Si
 	if (index < 0) return false;
 
 	const site = ring.sites[index];
-	for (const prop in values) {
-		site[prop] = values[prop];
+	let prop: keyof SiteData;
+	for (prop in values) {
+		const val = values[prop];
+		if (val) {
+			site[prop] = val;
+		}
 	}
 
 	return true;

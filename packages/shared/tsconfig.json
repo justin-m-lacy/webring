@@ -2,15 +2,14 @@
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
-    "outDir": "build",
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
+    "composite": true,
     "esModuleInterop": true,
     "incremental": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": true,
     "allowJs": true,
     "checkJs": false,
     "sourceMap": true,
@@ -23,29 +22,26 @@
       "esnext",
     ],
     "paths": {
-      "@shared/*": [
-        "../shared/*"
-      ],
       "@/*": [
         "src/*"
       ],
     },
   },
-  "references": [
-  ],
+  "references": [ ],
   "typeAcquisition": {
     "enable": true
   },
   "exclude": [
+    "assets/dist",
     "node_modules"
   ],
   "include": [
     "@types",
     "./global.d.ts",
-    "src/**/*.ts",
+    "./*.d.ts",
+    "./*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
-    "../shared/**/*.ts"
+    "src/**/*.vue"
   ]
 }

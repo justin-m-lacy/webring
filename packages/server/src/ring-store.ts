@@ -1,7 +1,10 @@
-import { loadRing, writeRing } from "./ring-io";
-import { WebringData } from "./webring";
+import { WebringData } from "@shared/webring.js";
+import { createNewRing, loadRing, writeRing } from "./ring-io.js";
+import { useWebringList } from './webring-list.js';
 
 let ringStore: ReturnType<typeof createStore> | null = null;
+
+const ringListStore = useWebringList();
 
 const createStore = () => {
 
@@ -26,6 +29,17 @@ const createStore = () => {
 
 	}
 
+	const createNew = async (ringId: string) => {
+
+		if (ringCache.has(ringId)) return false;
+		const data = { id: ringId, sites: [] };
+		createNewRing(ringId, data);
+
+		ringListStore.addRing(ringId);
+		ringCache.set(ringId, data);
+
+	}
+
 	const saveRing = (ringId: string) => {
 
 		const data = ringCache.get(ringId);
@@ -42,7 +56,8 @@ const createStore = () => {
 	return {
 		getOrLoad,
 		saveRing,
-		clearStore
+		clearStore,
+		createNew
 	}
 
 }

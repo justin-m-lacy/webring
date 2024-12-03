@@ -1,0 +1,24 @@
+{
+	"restoreTerminals.terminals": [
+		{
+			"splitTerminals": [
+				{
+					"name": "admin",
+					"commands": [
+						"cd packages/admin"
+					]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "server",
+					"commands": [
+						"cd packages/server"
+					]
+				}
+			]
+		},
+	]
+}

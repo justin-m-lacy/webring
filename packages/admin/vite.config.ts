@@ -39,6 +39,7 @@ export default async function ({ mode, command }) {
     resolve: {
       alias: [
         { find: /^@\//, replacement: `${resolve(__dirname, './src')}/` },
+        { find: /^@shared\//, replacement: `${resolve(__dirname, '../shared')}/` },
         { find: /^assets\//, replacement: `${resolve(__dirname, './assets')}/` },
       ]
     },
