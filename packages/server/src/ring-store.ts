@@ -1,4 +1,5 @@
-import { WebringData } from "@shared/webring.js";
+import { ErrorDuplicate, ErrorNotFound } from "@/errors.js";
+import { SiteData, WebringData } from "@shared/webring.js";
 import { createNewRing, loadRing, writeRing } from "./ring-io.js";
 import { useWebringList } from './webring-list.js';
 
@@ -9,7 +10,7 @@ const ringListStore = useWebringList();
 const createStore = () => {
 
 	const ringCache = new Map<string, WebringData>();
-	const getOrLoad = async (ringId: string) => {
+	const getOrLoad = async (ringId: string): Promise<WebringData | null> => {
 
 		const cur = ringCache.get(ringId);
 		if (cur) return cur;
@@ -29,6 +30,19 @@ const createStore = () => {
 
 	}
 
+	const addSite = async (ringId: string, siteId: string, data: SiteData) => {
+
+		const ring = await getOrLoad(ringId);
+		if (ring == null) throw new ErrorNotFound();
+		const site = ring.sites.find(s => s.id === siteId);
+		if (site) throw new ErrorDuplicate();
+
+		await writeRing(ring.id, ring);
+
+		ring.sites.push(data);
+
+	}
+
 	const createNew = async (ringId: string) => {
 
 		if (ringCache.has(ringId)) return false;
@@ -40,11 +54,10 @@ const createStore = () => {
 
 	}
 
-	const saveRing = (ringId: string) => {
+	const saveRing = (ring: WebringData) => {
 
-		const data = ringCache.get(ringId);
-		if (data) {
-			writeRing(ringId, data);
+		if (ring) {
+			writeRing(ring.id, ring);
 		}
 
 	}
@@ -56,6 +69,7 @@ const createStore = () => {
 	return {
 		getOrLoad,
 		saveRing,
+		addSite,
 		clearStore,
 		createNew
 	}
