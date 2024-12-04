@@ -63,7 +63,6 @@ const createCache = () => {
 	}
 
 	const saveRing = (ring: WebringData) => {
-
 		if (ring) {
 			writeRing(ring.id, ring);
 		}

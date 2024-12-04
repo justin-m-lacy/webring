@@ -44,7 +44,7 @@ watch(() => props.elm, (focusElm) => {
 </script>
 <template>
 	<div ref="infoEl"
-		 class=" bg-gray-900 absolute min-w-24 p-2 px-3 pb-3 z-50
+		 class="absolute min-w-24 p-2 px-3 pb-3 z-50 bg-slate-400
 			 	transition-opacity auto-fade flex flex-col space-y-2 border border-gray-600">
 		<div v-if="title">{{ title }}</div>
 		<div v-if="desc">{{ desc }}</div>

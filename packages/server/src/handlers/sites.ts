@@ -77,6 +77,8 @@ export const handleSites = (app: Express.Application) => {
 		const ring = res.locals.ring as WebringData;
 		const site = res.locals.site as SiteData;
 
+		console.log(`delete site: ${site.id}`);
+
 		const ind = ring.sites.findIndex(s => s.id === site.id);
 		if (ind < 0) {
 			res.sendStatus(404);

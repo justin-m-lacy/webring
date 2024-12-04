@@ -52,15 +52,17 @@ const confirmDelete = async () => {
 	}
 
 }
-const tryDelete = (ind: number) => {
+function tryDelete(ind: number) {
 
-	deleteSite.value = props.ringId;
-	deleteElm.value = siteRefs.value?.[ind];
+	const delSite = ring.value?.sites[ind];
+	if (!delSite) return;
+	deleteSite.value = delSite.id;
+	deleteElm.value = siteRefs.value?.[ind]?.querySelector('.deleter') ?? undefined;
 
 }
 </script>
 <template>
-	<div class="flex flex-col w-full pl-2 pt-1 space-y-2">
+	<div class="flex flex-col pl-2 pt-1 space-y-2">
 		<Confirm v-if="deleteSite" title="'Confirm Delete'"
 				 confirm-text="Delete"
 				 :elm="deleteElm"
@@ -74,7 +76,7 @@ const tryDelete = (ind: number) => {
 				<a :href="site.url"
 				   class="italic visited:bg-purple-900 text-blue-700">{{ site.url }}</a>
 			</span>
-			<span class="material-symbols-outlined" @click="tryDelete(ind)">
+			<span class="material-symbols-outlined deleter" @click="tryDelete(ind)">
 				delete
 			</span>
 		</div>

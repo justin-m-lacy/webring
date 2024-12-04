@@ -78,10 +78,9 @@ export async function deleteRing(ringId: string): Promise<true> {
 
 export async function deleteSite(ringId: string, siteId: string): Promise<true> {
 
-	const res = await fetch(`${RingHost}/rings/${ringId}`, {
+	const res = await fetch(`${RingHost}/rings/${ringId}/sites/${siteId}`, {
 		method: 'DELETE',
-		credentials: 'include',
-		body: JSON.stringify({ siteId })
+		credentials: 'include'
 	});
 
 	if (res.status !== 200) {

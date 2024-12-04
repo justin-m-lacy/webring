@@ -41,9 +41,7 @@ export async function loadRing(ringId: string): Promise<WebringData> {
 export async function writeRing(ringId: string, data: WebringData): Promise<boolean> {
 
 	try {
-		await writeFile(getRingFile(ringId), JSON.stringify(data), {
-			flag: 'r+'
-		});
+		await writeFile(getRingFile(ringId), JSON.stringify(data));
 		return true;
 	} catch (err) {
 		return false;

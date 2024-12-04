@@ -1,8 +1,8 @@
 import cors from 'cors';
 import express from 'express';
-import { handleRingList } from './src/handlers/rings.js';
+import { handleRingList } from './src/handlers/ring-list.js';
+import { handleWebring } from './src/handlers/rings.js';
 import { handleSites } from './src/handlers/sites';
-import { handleWebring } from './src/handlers/webring.js';
 import { useRingCache } from "./src/ring-cache.js";
 
 const ringStore = useRingCache();
