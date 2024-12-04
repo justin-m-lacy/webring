@@ -4,7 +4,8 @@ declare global {
 
 		interface ProcessEnv {
 
-			DEFAULT_RING: string
+			DEFAULT_RING: string,
+			WEB_HOST: string
 
 		}
 

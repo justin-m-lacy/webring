@@ -67,8 +67,7 @@ const tryDelete = (ind: number) => {
 				 @confirm="confirmDelete"
 				 @cancel="clearDelete" />
 		<div v-if="ring" v-for="(site, ind) in ring.sites" ref="sites" :key="site.url">
-			<!--<SiteView :site="site" />-->
-			<span>{{ site.id }}</span>
+			<span @select="selectSite(site.id)">{{ site.id }}</span>
 			<span><a :href="site.url">{{ site.url }}</a></span>
 			<span @click="tryDelete(ind)">TRY DELETE</span>
 		</div>

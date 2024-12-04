@@ -4,12 +4,12 @@ import { defineStore } from "pinia";
 
 export type AdminRoute = 'main' | 'createRing' | 'createSite' | 'viewRing' | 'viewSite';
 
-const ringStore = useRingStore();
-
 /**
  * Rudimentary/basic routing.
  */
 export const useRouteStore = defineStore('route', () => {
+
+	const ringStore = useRingStore();
 
 	const viewRingId = ref<string>();
 	const viewSiteId = ref<string>();

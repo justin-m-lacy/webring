@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "build": "rimraf build && tsx build.esbuild.ts",
-    "dev": "tsx index.ts"
+    "dev": "tsx --env-file=.env index.ts"
   },
-  "keywords": [],
+  "keywords": [ ],
   "author": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.1"
   },
   "devDependencies": {

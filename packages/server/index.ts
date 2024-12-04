@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import { handleRings } from './src/handlers/rings.js';
 import { handleSites } from './src/handlers/sites';
@@ -12,6 +13,13 @@ const port = 3000;
 if (process.env.DEFAULT_RING) {
 	ringStore.getOrLoad(process.env.DEFAULT_RING);
 }
+
+
+console.log(`allow access: ${process.env.WEB_HOST}`)
+app.use(cors({
+	origin: process.env.WEB_HOST,
+	credentials: true
+}));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

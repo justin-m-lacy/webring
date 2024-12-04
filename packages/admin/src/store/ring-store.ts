@@ -1,9 +1,12 @@
 import { createRing, createSite, deleteRing, deleteSite, fetchRingData } from "@/api/webrings";
+import { useRingList } from "@/store/ring-list-store";
 import { SiteData, WebringData } from "@shared/webring";
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from "pinia";
 
 export const useRingStore = defineStore('ring', () => {
+
+	const ringList = useRingList();
 
 	const webrings = ref(new Map<string, WebringData>());
 
@@ -50,12 +53,13 @@ export const useRingStore = defineStore('ring', () => {
 		if (!ring) return false;
 
 		if (ring.sites.some(s => s.id === siteData.id || s.url === siteData.url)) {
-			console.error(`Duplicate Ring: ${siteData.id}: ${siteData.url}`);
+			console.error(`Dupe Ring: ${siteData.id}: ${siteData.url}`);
 			return false;
 		}
 
-		createSite(ringId, siteData);
+		await createSite(ringId, siteData);
 
+		ringList.addRingLocal(ringId);
 
 	}
 

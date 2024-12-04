@@ -41,8 +41,8 @@ function onCreated(ringId: string) {
 		<div>Webring Admin</div>
 		<RingSelector />
 		<CreateRing v-if="curRoute === 'createRing'" @created="onCreated" />
-		<RingView v-else-if="curRoute === 'viewRing' && routeStore.viewRing"
-				  :ring="routeStore.viewRing"
+		<RingView v-else-if="curRoute === 'viewRing'"
+				  :ring-id="routeStore.viewRingId!"
 				  @delete-site="deleteSite"
 				  @select="viewSite" />
 		<SiteView v-else-if="curRoute === 'viewSite'"

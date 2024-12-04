@@ -6,7 +6,7 @@ export async function fetchRingIds(): Promise<string[]> {
 
 	const res = await fetch(`${RingHost}/rings`, {
 		method: 'GET',
-		credentials: 'include'
+		credentials: 'include',
 	});
 
 	if (res.status !== 200) throw new Error(res.statusText);

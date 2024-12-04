@@ -21,7 +21,7 @@ export default async function ({ mode, command }) {
 
   const origins = ["'self'"].join(" ");
 
-  const api_base = getApiBase(process.env.VITE_API_BASE);
+  const api_base = getApiBase(process.env.VITE_RING_HOST);
 
   const securityPolicies = [
     `default-src ${origins}`,
