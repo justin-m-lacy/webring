@@ -13,7 +13,7 @@ export async function loadRingList(): Promise<string[]> {
 	const entries = await readdir('./rings', { withFileTypes: true });
 
 	return entries.filter(
-		f => f.isFile() && extname(f.name) === 'json'
+		f => f.isFile() && extname(f.name) === '.json'
 	).map(f => basename(f.name, '.json'));
 
 }

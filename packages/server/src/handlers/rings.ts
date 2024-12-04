@@ -4,14 +4,13 @@ import Express from 'express';
 
 const ringStore = useRingCache();
 
-export const handleRings = (app: Express.Application) => {
+export const handleRingList = (app: Express.Application) => {
 
 	/**
 	 * Get list of all webrings.
 	 */
 	app.get('/rings', async (req, res) => {
 
-		console.log(`get ring list`);
 		const list = await loadRingList();
 		res.json({
 			rings: list

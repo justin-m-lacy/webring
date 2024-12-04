@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "rimraf build && tsx build.esbuild.ts",
-    "dev": "tsx --env-file=.env index.ts"
+    "dev": "tsx watch --env-file=.env index.ts"
   },
   "keywords": [ ],
   "author": "",

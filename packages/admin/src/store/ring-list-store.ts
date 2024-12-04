@@ -26,6 +26,7 @@ export const useRingList = defineStore('rings', () => {
 
 		try {
 			const ids = await fetchRingIds();
+			console.log(`fetched ring ids: ${ids.length}`);
 			webringIds.value = ids;
 		} catch (err) {
 			console.error(err);
