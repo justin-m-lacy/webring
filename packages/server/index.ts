@@ -13,7 +13,7 @@ if (process.env.DEFAULT_RING) {
 	ringStore.getOrLoad(process.env.DEFAULT_RING);
 }
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 handleRings(app);

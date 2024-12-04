@@ -5,10 +5,12 @@ import Confirm from './components/Confirm.vue';
 import { useRingStore } from '@/store/ring-store';
 
 const props = defineProps<{
-	ring: WebringData
+	ringId: string
 }>();
 
 const ringStore = useRingStore();
+
+const ring = computed(() => ringStore.getRing(props.ringId));
 
 const emits = defineEmits<{
 	(e: 'select', ring: string, site: string): void;
@@ -23,7 +25,7 @@ const deleteElm = ref<HTMLElement | undefined>(undefined);
 const deleting = ref(false);
 
 function selectSite(siteId: string) {
-	emits('select', props.ring.id, siteId);
+	emits('select', props.ringId, siteId);
 }
 
 const clearDelete = () => {
@@ -40,7 +42,7 @@ const confirmDelete = async () => {
 		const siteId = deleteSite.value;
 		if (siteId == null) return;
 
-		await ringStore.removeSite(props.ring.id, siteId);
+		await ringStore.removeSite(props.ringId, siteId);
 
 	} catch (err) {
 
@@ -52,7 +54,7 @@ const confirmDelete = async () => {
 }
 const tryDelete = (ind: number) => {
 
-	deleteSite.value = props.ring.sites[ind].id;
+	deleteSite.value = props.ringId;
 	deleteElm.value = siteRefs.value?.[ind];
 
 }
@@ -64,7 +66,7 @@ const tryDelete = (ind: number) => {
 				 :elm="deleteElm"
 				 @confirm="confirmDelete"
 				 @cancel="clearDelete" />
-		<div v-for="(site, ind) in ring.sites" ref="sites" :key="site.url">
+		<div v-if="ring" v-for="(site, ind) in ring.sites" ref="sites" :key="site.url">
 			<!--<SiteView :site="site" />-->
 			<span>{{ site.id }}</span>
 			<span><a :href="site.url">{{ site.url }}</a></span>

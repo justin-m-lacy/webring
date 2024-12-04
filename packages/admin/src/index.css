@@ -11,7 +11,7 @@
   }
 
   input[type=text]{
-    background-color: theme(colors.bluez.500)
+    background-color: theme(colors.neutral.300);
   };
   input:focus {
     outline:none;

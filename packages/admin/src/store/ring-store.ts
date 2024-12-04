@@ -21,6 +21,10 @@ export const useRingStore = defineStore('ring', () => {
 		return webrings.value.get(ringId);
 	}
 
+	function getSite(ringId: string, siteId: string) {
+		return webrings.value.get(ringId)?.sites.find(s => s.id === siteId);
+	}
+
 	async function getOrLoad(ringId: string) {
 
 		const ring = webrings.value.get(ringId);
@@ -96,6 +100,7 @@ export const useRingStore = defineStore('ring', () => {
 		webrings,
 		getOrLoad,
 		getRing,
+		getSite,
 		addRingSite,
 		removeRing,
 		removeSite,
