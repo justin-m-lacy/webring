@@ -1,4 +1,4 @@
-import { WebringData } from "@shared/webring";
+import { SiteData, WebringData } from "@shared/webring";
 
 const RingHost = import.meta.env.VITE_RING_HOST;
 
@@ -36,6 +36,36 @@ export async function createRing(ringId: string): Promise<true> {
 		method: 'POST',
 		credentials: 'include',
 		body: JSON.stringify({ ringid: ringId })
+	});
+
+	if (res.status !== 200) {
+		throw new Error(res.statusText);
+	}
+	return true;
+
+}
+
+export async function createSite(ringId: string, site: SiteData): Promise<true> {
+
+	const res = await fetch(`${RingHost}/rings`, {
+		method: 'POST',
+		credentials: 'include',
+		body: JSON.stringify({ ringid: ringId, site })
+	});
+
+	if (res.status !== 200) {
+		throw new Error(res.statusText);
+	}
+	return true;
+
+}
+
+export async function deleteSite(ringId: string, siteId: string): Promise<true> {
+
+	const res = await fetch(`${RingHost}/rings`, {
+		method: 'DELETE',
+		credentials: 'include',
+		body: JSON.stringify({ ringid: ringId, siteId })
 	});
 
 	if (res.status !== 200) {

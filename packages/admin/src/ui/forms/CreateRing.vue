@@ -18,12 +18,18 @@ async function tryCreate() {
 	const createId = ringId.value;
 	if (!createId) return;
 
-	creating.value = true;
-	await ringStore.createNew(createId);
+	try {
+		creating.value = true;
+		await ringStore.createNew(createId);
 
-	creating.value = false;
+		emits('created', createId);
 
-	emits('created', createId);
+	} catch (err) {
+		console.error(err);
+	} finally {
+		creating.value = false;
+	}
+
 
 }
 
@@ -31,7 +37,7 @@ async function tryCreate() {
 <template>
 	<div>
 
-		<input type="text" v-model="ringId">
+		<input type="text" v-model="ringId" placeholder="webring id">
 		<button type="button" :disabled="creating"
 				@click="tryCreate">Create</button>
 		<button type="button" @click="emits('cancel')">Cancel</button>

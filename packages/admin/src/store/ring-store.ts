@@ -1,5 +1,5 @@
-import { createRing, fetchRingData } from "@/api/webrings";
-import { WebringData } from "@shared/webring";
+import { createRing, createSite, deleteSite, fetchRingData } from "@/api/webrings";
+import { SiteData, WebringData } from "@shared/webring";
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from "pinia";
 
@@ -33,6 +33,41 @@ export const useRingStore = defineStore('ring', () => {
 		}
 	}
 
+	async function addRingSite(ringId: string, siteData: SiteData) {
+
+		const ring = webrings.value.get(ringId);
+		if (!ring) return false;
+
+		if (ring.sites.some(s => s.id === siteData.id || s.url === siteData.url)) {
+			console.error(`Duplicate Ring: ${siteData.id}: ${siteData.url}`);
+			return false;
+		}
+
+		createSite(ringId, siteData);
+
+
+	}
+
+	async function removeSite(ringId: string, siteId: string) {
+
+		try {
+
+			const ring = webrings.value.get(ringId);
+			if (!ring) return;
+			const ind = ring.sites.findIndex(s => s.id === siteId);
+
+			if (ind < 0) return;
+
+			await deleteSite(ringId, siteId);
+
+			ring.sites.splice(ind, 1);
+
+		} catch (err) {
+
+		}
+
+	}
+
 	/**
 	 * debounced loading of current ring data
 	 */
@@ -54,6 +89,8 @@ export const useRingStore = defineStore('ring', () => {
 		setCur,
 		webrings,
 		curRing,
+		addRingSite,
+		removeSite,
 		loadRingData,
 		loadCurRing,
 		createNew

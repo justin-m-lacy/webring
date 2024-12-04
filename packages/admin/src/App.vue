@@ -2,7 +2,7 @@
 import { useRingStore } from '@/store/ring-store';
 import { useRingListStore } from './store/ring-list-store';
 import RingView from '@/ui/RingView.vue';
-import CreateRing from '@/ui/CreateRing.vue';
+import CreateRing from '@/ui/forms/CreateRing.vue';
 
 const ringList = useRingListStore();
 const ringStore = useRingStore();

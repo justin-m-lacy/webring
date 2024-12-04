@@ -5,10 +5,15 @@ const props = defineProps<{
 	site: SiteData
 }>();
 
+
 </script>
 <template>
-	<div>
-		<div><span>id:</span><span>{{ site.id }}</span></div>
+	<div class="flex flex-col">
+		<div>
+			<img v-if="site.icon" :src="site.icon">
+			<span>id:</span><span>{{ site.id }}</span>
+		</div>
+
 		<div><a :href="site.url">{{ site.url }}</a></div>
 		<div>{{ site.title || 'No title' }}</div>
 		<div>{{ site.banner || 'No banner' }}</div>
@@ -16,6 +21,6 @@ const props = defineProps<{
 			<span>Creator:</span>
 			<span>{{ site.creator || 'Unknown' }}</span>
 		</div>
-		<div>{{ site.icon }}</div>
+
 	</div>
 </template>

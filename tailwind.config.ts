@@ -1,10 +1,5 @@
-import Forms from '@tailwindcss/forms';
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 import plugin from 'tailwindcss/plugin';
-import { flicker } from "./tailwind/tailwind.flicker";
-import gradients from './tailwind/tailwind.gradients';
-import neon from "./tailwind/tailwind.neons";
-import tailwindScrollbar from './tailwind/tailwind.scrollbar';
 
 /** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
 export default {
@@ -25,15 +20,6 @@ export default {
       },
       keyframes: {
 
-        flicker,
-        throb: {
-          '0%,100%': {
-            color: 'var(--throb-on-color)'
-          },
-          '50%': {
-            color: 'var(--throb-off-color)'
-          }
-        },
         blink: {
           '0%,100%': {
             opacity: 1
@@ -244,14 +230,6 @@ export default {
         })
 
     }),
-
-    tailwindScrollbar,
-
-    Forms,
-
-    gradients,
-
-    neon
 
   ],
 };
