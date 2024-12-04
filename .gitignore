@@ -52,3 +52,5 @@ Thumbs.db
 *.wmv
 
 **/.env
+*.env
+packages/server/.env
