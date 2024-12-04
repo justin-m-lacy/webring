@@ -1,4 +1,4 @@
-import { loadRingList } from "./ring-io.js";
+import { loadRingList } from "./io/ring-io.js";
 
 let webringsStore: ReturnType<typeof createStore> | null = null;
 
@@ -11,6 +11,15 @@ const createStore = () => {
 		if (!ringsList.includes(ringId)) {
 			ringsList.push(ringId);
 		}
+	}
+
+	const removeRing = (ringId: string) => {
+
+		const ind = ringsList?.indexOf(ringId) ?? -1;
+		if (ind >= 0) {
+			ringsList!.splice(ind, 1);
+		}
+
 	}
 
 	const load = async () => {
@@ -27,6 +36,7 @@ const createStore = () => {
 	return {
 		getOrLoad,
 		addRing,
+		removeRing,
 		load,
 	}
 

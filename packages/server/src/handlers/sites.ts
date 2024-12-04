@@ -1,8 +1,8 @@
-import { useRingStore } from '@/ring-store.js';
+import { useRingCache } from '@/ring-cache.js';
 import { SiteData, WebringData } from '@shared/webring.js';
 import Express from 'express';
 
-const ringStore = useRingStore();
+const ringStore = useRingCache();
 
 export const handleSites = (app: Express.Application) => {
 

@@ -1,7 +1,7 @@
-import { useRingStore } from '@/ring-store.js';
+import { useRingCache } from '@/ring-cache.js';
 import Express from 'express';
 
-const ringStore = useRingStore();
+const ringStore = useRingCache();
 export const handleWebring = (app: Express.Application) => {
 
 	app.use('/rings/:ringid', async (req, res, next) => {
@@ -34,6 +34,9 @@ export const handleWebring = (app: Express.Application) => {
 	});
 
 	app.delete('/rings/:ringid', async (req, res) => {
+
+		console.log(`delete ring: ${req.params.ringid}`);
+		await ringStore.deleteRing(req.params.ringid);
 
 	});
 

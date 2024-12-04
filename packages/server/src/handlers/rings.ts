@@ -1,8 +1,8 @@
-import { loadRingList } from '@/ring-io.js';
-import { useRingStore } from '@/ring-store.js';
+import { loadRingList } from '@/io/ring-io.js';
+import { useRingCache } from '@/ring-cache.js';
 import Express from 'express';
 
-const ringStore = useRingStore();
+const ringStore = useRingCache();
 
 export const handleRings = (app: Express.Application) => {
 
@@ -26,7 +26,7 @@ export const handleRings = (app: Express.Application) => {
 
 		const ringId = req.body.ringid;
 		console.log(`create ring: ${ringId}`);
-		ringStore.createNew(ringId);
+		ringStore.newRing(ringId);
 
 	});
 

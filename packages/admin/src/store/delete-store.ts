@@ -60,8 +60,17 @@ export const useDeleteStore = defineStore('delete', () => {
 
 	}
 
+	function cancelDelete() {
+
+		deleteRingId.value = undefined;
+		deleteSiteId.value = undefined;
+		deleting.value = false;
+
+	}
 
 	return {
+		cancelDelete,
+		deleteRing,
 		deleteSite,
 		deleting
 	}

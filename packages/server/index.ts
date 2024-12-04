@@ -2,9 +2,9 @@ import express from 'express';
 import { handleRings } from './src/handlers/rings.js';
 import { handleSites } from './src/handlers/sites';
 import { handleWebring } from './src/handlers/webring.js';
-import { useRingStore } from "./src/ring-store.js";
+import { useRingCache } from "./src/ring-cache.js";
 
-const ringStore = useRingStore();
+const ringStore = useRingCache();
 
 const app = express();
 const port = 3000;

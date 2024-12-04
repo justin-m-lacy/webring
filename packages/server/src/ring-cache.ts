@@ -1,13 +1,13 @@
 import { ErrorDuplicate, ErrorNotFound } from "@/errors.js";
 import { SiteData, WebringData } from "@shared/webring.js";
-import { createNewRing, loadRing, writeRing } from "./ring-io.js";
+import { createNewRing, deleteRingIo, loadRing, writeRing } from "./io/ring-io.js";
 import { useWebringList } from './webring-list.js';
 
-let ringStore: ReturnType<typeof createStore> | null = null;
+let ringCache: ReturnType<typeof createCache> | null = null;
 
 const ringListStore = useWebringList();
 
-const createStore = () => {
+const createCache = () => {
 
 	const ringCache = new Map<string, WebringData>();
 	const getOrLoad = async (ringId: string): Promise<WebringData | null> => {
@@ -43,7 +43,7 @@ const createStore = () => {
 
 	}
 
-	const createNew = async (ringId: string) => {
+	const newRing = async (ringId: string) => {
 
 		if (ringCache.has(ringId)) return false;
 		const data = { id: ringId, sites: [] };
@@ -51,6 +51,14 @@ const createStore = () => {
 
 		ringListStore.addRing(ringId);
 		ringCache.set(ringId, data);
+
+	}
+
+	const deleteRing = async (ringId: string) => {
+
+		await deleteRingIo(ringId);
+		ringCache.delete(ringId);
+		ringListStore.removeRing(ringId);
 
 	}
 
@@ -71,11 +79,12 @@ const createStore = () => {
 		saveRing,
 		addSite,
 		clearStore,
-		createNew
+		newRing,
+		deleteRing
 	}
 
 }
 
-export const useRingStore = () => {
-	return ringStore ?? (ringStore = createStore());
+export const useRingCache = () => {
+	return ringCache ?? (ringCache = createCache());
 }
