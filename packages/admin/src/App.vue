@@ -19,11 +19,17 @@ function selectRing(ringId: string) {
 
 }
 
+async function deleteSite(ringId: string, siteId: string) {
+
+	await ringStore.removeSite(ringId, siteId);
+	if (routeStore.viewRingId === ringId && routeStore.viewSiteId === siteId) {
+		routeStore.clearViewSite();
+	}
+
+}
+
 function viewSite(ringId: string, siteId: string) {
-
-	routeStore.viewRingId = ringId;
-	routeStore.viewSite = siteId;
-
+	routeStore.setViewSite(ringId, siteId);
 }
 
 function goCreateNew() {
@@ -44,6 +50,7 @@ function onCreated(ringId: string) {
 		<CreateRing v-if="creating" @created="onCreated" />
 		<RingView v-else-if="routeStore.viewRing"
 				  :ring="routeStore.viewRing"
+				  @delete-site="deleteSite"
 				  @select="viewSite" />
 	</div>
 </template>

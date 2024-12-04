@@ -12,7 +12,7 @@ const ringStore = useRingStore();
 
 const emits = defineEmits<{
 	(e: 'select', ring: string, site: string): void;
-	(e: 'delete', ring: string, site: string): void;
+	(e: 'delete-site', ring: string, site: string): void;
 }>();
 
 const siteRefs = useTemplateRef('sites');

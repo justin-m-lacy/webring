@@ -7,7 +7,7 @@ const ringStore = useRingStore();
 export const useRouteStore = defineStore('route', () => {
 
 	const viewRingId = ref<string>();
-	const viewSite = ref<string>();
+	const viewSiteId = ref<string>();
 
 	/**
 	 * debounced loading of current ring data
@@ -27,26 +27,29 @@ export const useRouteStore = defineStore('route', () => {
 	});
 
 	function setViewRing(ringId: string) {
+
 		viewRingId.value = ringId;
-		viewSite.value = undefined;
+		viewSiteId.value = undefined;
+		loadCurRing();
 	}
+
 	function setViewSite(ringId: string, siteId: string) {
-		viewSite.value = siteId;
+		viewSiteId.value = siteId;
 		viewRingId.value = ringId;
 	}
 
 	const clearViewSite = () => {
-		viewSite.value = undefined;
+		viewSiteId.value = undefined;
 	}
 	const clearViewRing = () => {
 		viewRingId.value = undefined;
-		viewSite.value = undefined;
+		viewSiteId.value = undefined;
 	}
 
 	return {
 		viewRingId,
 		viewRing,
-		viewSite,
+		viewSiteId,
 		setViewSite,
 		setViewRing,
 		clearViewRing,

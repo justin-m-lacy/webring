@@ -1,4 +1,4 @@
-import { createRing, createSite, deleteSite, fetchRingData } from "@/api/webrings";
+import { createRing, createSite, deleteRing, deleteSite, fetchRingData } from "@/api/webrings";
 import { SiteData, WebringData } from "@shared/webring";
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from "pinia";
@@ -55,6 +55,23 @@ export const useRingStore = defineStore('ring', () => {
 
 	}
 
+	async function removeRing(ringId: string) {
+
+		try {
+
+			const ring = webrings.value.get(ringId);
+			if (!ring) return;
+
+			await deleteRing(ringId);
+
+			webrings.value.delete(ringId);
+
+		} catch (err) {
+
+		}
+
+	}
+
 	async function removeSite(ringId: string, siteId: string) {
 
 		try {
@@ -80,6 +97,7 @@ export const useRingStore = defineStore('ring', () => {
 		getOrLoad,
 		getRing,
 		addRingSite,
+		removeRing,
 		removeSite,
 		loadRing,
 		createNew

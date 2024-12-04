@@ -60,12 +60,27 @@ export async function createSite(ringId: string, site: SiteData): Promise<true> 
 
 }
 
-export async function deleteSite(ringId: string, siteId: string): Promise<true> {
+export async function deleteRing(ringId: string): Promise<true> {
 
 	const res = await fetch(`${RingHost}/rings`, {
 		method: 'DELETE',
 		credentials: 'include',
-		body: JSON.stringify({ ringid: ringId, siteId })
+		body: JSON.stringify({ ringid: ringId })
+	});
+
+	if (res.status !== 200) {
+		throw new Error(res.statusText);
+	}
+	return true;
+
+}
+
+export async function deleteSite(ringId: string, siteId: string): Promise<true> {
+
+	const res = await fetch(`${RingHost}/rings/${ringId}`, {
+		method: 'DELETE',
+		credentials: 'include',
+		body: JSON.stringify({ siteId })
 	});
 
 	if (res.status !== 200) {
