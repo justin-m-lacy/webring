@@ -5,14 +5,7 @@ import { defineStore } from "pinia";
 
 export const useRingStore = defineStore('ring', () => {
 
-	const curRingId = ref<string | null>(null);
-
 	const webrings = ref(new Map<string, WebringData>());
-
-	const curRing = computed(() => {
-		const id = curRingId.value;
-		return id ? webrings.value.get(id) : null;
-	});
 
 	const createNew = useDebounceFn(async (ringId: string) => {
 
@@ -24,10 +17,24 @@ export const useRingStore = defineStore('ring', () => {
 
 	}, 500);
 
-	async function loadRingData(id: string) {
+	function getRing(ringId: string) {
+		return webrings.value.get(ringId);
+	}
+
+	async function getOrLoad(ringId: string) {
+
+		const ring = webrings.value.get(ringId);
+		if (ring) return ring;
+
+		await loadRing(ringId);
+		return webrings.value.get(ringId);
+
+	}
+
+	async function loadRing(ringId: string) {
 		try {
-			const ringData = await fetchRingData(id);
-			webrings.value.set(id, ringData);
+			const ringData = await fetchRingData(ringId);
+			webrings.value.set(ringId, ringData);
 		} catch (err) {
 			console.error(err);
 		}
@@ -68,31 +75,13 @@ export const useRingStore = defineStore('ring', () => {
 
 	}
 
-	/**
-	 * debounced loading of current ring data
-	 */
-	const loadCurRing = useDebounceFn(async () => {
-
-		const ringId = curRingId.value;
-		if (ringId) await loadRingData(ringId);
-
-	}, 200);
-
-	function setCur(id: string | null) {
-
-		curRingId.value = id;
-		if (id) loadCurRing();
-
-	}
-
 	return {
-		setCur,
 		webrings,
-		curRing,
+		getOrLoad,
+		getRing,
 		addRingSite,
 		removeSite,
-		loadRingData,
-		loadCurRing,
+		loadRing,
 		createNew
 	}
 
