@@ -1,31 +1,40 @@
-import { loadRingList } from '@/io/ring-io.js';
 import { useRingCache } from '@/ring-cache.js';
 import Express from 'express';
 
 const ringStore = useRingCache();
+export const handleWebring = (app: Express.Application) => {
 
-export const handleRingList = (app: Express.Application) => {
+	app.use('/rings/:ringid', async (req, res, next) => {
 
-	/**
-	 * Get list of all webrings.
-	 */
-	app.get('/rings', async (req, res) => {
+		const ringId = req.params.ringid;
+		if (!ringId || typeof ringId !== 'string' || ringId.length > 100) {
+			res.sendStatus(400);
+			return;
+		}
 
-		const list = await loadRingList();
-		res.json({
-			rings: list
+		const ring = await ringStore.getOrLoad(ringId);
+		if (!ring) {
+			res.sendStatus(404);
+			return;
+		}
+
+		res.locals.ring = ring;
+		next();
+
+	});
+
+
+	app.get('/rings/:ringid', async (req, res) => {
+		res.send({
+			ring: res.locals.ring
 		});
 
 	});
 
-	/**
-	 * Create new Webring
-	 */
-	app.post('/rings', async (req, res) => {
+	app.delete('/rings/:ringid', async (req, res) => {
 
-		const ringId = req.body.ringid;
-		console.log(`create ring: ${ringId}`);
-		ringStore.newRing(ringId);
+		console.log(`delete ring: ${req.params.ringid}`);
+		await ringStore.deleteRing(req.params.ringid);
 
 	});
 

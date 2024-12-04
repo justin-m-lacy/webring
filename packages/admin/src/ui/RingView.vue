@@ -74,7 +74,9 @@ const tryDelete = (ind: number) => {
 				<a :href="site.url"
 				   class="italic visited:bg-purple-900 text-blue-700">{{ site.url }}</a>
 			</span>
-			<span @click="tryDelete(ind)">DELETE</span>
+			<span class="material-symbols-outlined" @click="tryDelete(ind)">
+				delete
+			</span>
 		</div>
 	</div>
 </template>

@@ -28,8 +28,8 @@ export default async function ({ mode, command }) {
     `connect-src ${origins} ${api_base}`,
     `img-src ${origins} 'unsafe-inline'`,
     `script-src ${origins} 'unsafe-eval'`,
-    `font-src ${origins}`,
-    `style-src ${origins} 'unsafe-inline'`,
+    `font-src ${origins}  data: https://fonts.googleapis.com`,
+    `style-src ${origins} 'unsafe-inline' https://fonts.googleapis.com`,
   ];
 
   return defineConfig({
