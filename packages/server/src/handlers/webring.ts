@@ -25,8 +25,6 @@ export const handleWebring = (app: Express.Application) => {
 
 
 	app.get('/rings/:ringid', async (req, res) => {
-
-		console.log(`get ring: ${req.params.ringid}`);
 		res.send({
 			ring: res.locals.ring
 		});

@@ -42,7 +42,7 @@
   ],
   "include": [
     "@types",
-    "./global.d.ts",
+    "./*.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",

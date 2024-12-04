@@ -60,16 +60,21 @@ const tryDelete = (ind: number) => {
 }
 </script>
 <template>
-	<div>
+	<div class="flex flex-col w-full pl-2 pt-1 space-y-2">
 		<Confirm v-if="deleteSite" title="'Confirm Delete'"
 				 confirm-text="Delete"
 				 :elm="deleteElm"
 				 @confirm="confirmDelete"
 				 @cancel="clearDelete" />
-		<div v-if="ring" v-for="(site, ind) in ring.sites" ref="sites" :key="site.url">
-			<span @select="selectSite(site.id)">{{ site.id }}</span>
-			<span><a :href="site.url">{{ site.url }}</a></span>
-			<span @click="tryDelete(ind)">TRY DELETE</span>
+		<div v-if="ring" v-for="(site, ind) in ring.sites"
+			 ref="sites" :key="site.url"
+			 class="flex space-x-2 cursor-pointer">
+			<span @select="selectSite(site.id)">{{ site.id ?? site.title }}</span>
+			<span>
+				<a :href="site.url"
+				   class="italic visited:bg-purple-900 text-blue-700">{{ site.url }}</a>
+			</span>
+			<span @click="tryDelete(ind)">DELETE</span>
 		</div>
 	</div>
 </template>

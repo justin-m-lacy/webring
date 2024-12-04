@@ -22,6 +22,8 @@ sample/
 # Package files
 *.jar
 
+**/.vscode/
+
 # Maven
 target/
 dist/

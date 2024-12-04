@@ -37,9 +37,9 @@ function onCreated(ringId: string) {
 
 </script>
 <template>
-	<div>
-		<div>Webring Admin</div>
-		<RingSelector />
+	<div class="flex flex-col space-y-1 m-2">
+		<div class="cursor-pointer text-lg">Webring Admin</div>
+		<RingSelector class="" />
 		<CreateRing v-if="curRoute === 'createRing'" @created="onCreated" />
 		<RingView v-else-if="curRoute === 'viewRing'"
 				  :ring-id="routeStore.viewRingId!"

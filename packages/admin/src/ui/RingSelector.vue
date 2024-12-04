@@ -15,12 +15,16 @@ function selectRing(ringId: string) {
 
 </script>
 <template>
-	<div class="flex">
-		<div v-if="routeStore.viewRingId">
-			<span>Current Ring:</span>
+	<div class="flex w-full cursor-pointer select-none space-x-2">
+		<!--<div v-if="routeStore.viewRingId">
+			<span>current Ring:</span>
 			<span>{{ routeStore.viewRingId }}</span>
-		</div>
-		<div v-for="id in ringList.webringIds" @click="selectRing(id)" :key="id">
+		</div>-->
+		<div v-for="id in ringList.webringIds" :key="id"
+			 :class="{
+				'font-bold': id === routeStore.viewRingId,
+			}"
+			 @click="selectRing(id)">
 			{{ id }}
 		</div>
 		<button type="button" @click="createNew()">[+]</button>

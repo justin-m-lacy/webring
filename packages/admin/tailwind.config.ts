@@ -1,10 +1,9 @@
-import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 import plugin from 'tailwindcss/plugin';
 
 /** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
 export default {
 
-  content: ['./src/**/*.{vue,js,ts,jsx,tsx,html}', 'index.html'],
+  content: ["./src/**/*.{html,ts,vue}", "index.html"],
   theme: {
 
 
@@ -179,25 +178,6 @@ export default {
     },
   },
   plugins: [
-
-    plugin(({ matchUtilities, theme }) => {
-
-      matchUtilities({
-
-        'throb-on': (value) => ({
-          '--throb-on-color': value
-        }), 'throb-off': (value) => ({
-          '--throb-off-color': value
-        }),
-
-
-      }, {
-        respectPrefix: false,
-        values: flattenColorPalette(theme('colors')),
-        type: 'color',
-      });
-
-    }),
 
     plugin(({ addComponents, theme }) => {
 

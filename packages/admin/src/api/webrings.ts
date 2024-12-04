@@ -20,6 +20,7 @@ export async function fetchRingData(ringId: string): Promise<WebringData> {
 
 	const res = await fetch(`${RingHost}/rings/${ringId}`, {
 		method: 'GET',
+
 		credentials: 'include'
 	});
 
