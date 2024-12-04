@@ -51,6 +51,4 @@ Thumbs.db
 *.mov
 *.wmv
 
-**/.env
 *.env
-packages/server/.env
