@@ -2,7 +2,7 @@ import { useRingCache } from '@/ring-cache.js';
 import { SiteData, WebringData } from '@shared/webring.js';
 import Express from 'express';
 
-const ringStore = useRingCache();
+const ringCache = useRingCache();
 
 export const handleSites = (app: Express.Application) => {
 
@@ -37,20 +37,22 @@ export const handleSites = (app: Express.Application) => {
 		}
 		const ring = res.locals.ring as WebringData;
 
-		const id = site.id;
 		const url = site.url;
 
-		if (ring.sites.find(s => s.id === id || s.url === url)) {
+		if (ring.sites.find(s => s.url === url)) {
 			// conflict
 			res.sendStatus(409);
 			return;
 		}
+		const siteId = ringCache.addSite(ring.id, site);
+
+		res.json({ siteid: siteId });
 
 	});
 
 	app.get('/rings/:ringid/sites/:site/', async (req, res) => {
 
-		const ring = await ringStore.getOrLoad(req.params.ringid);
+		const ring = await ringCache.getOrLoad(req.params.ringid);
 
 		if (ring) {
 
@@ -86,7 +88,7 @@ export const handleSites = (app: Express.Application) => {
 		}
 
 		ring.sites.splice(ind, 1);
-		ringStore.saveRing(ring);
+		ringCache.saveRing(ring);
 
 	});
 

@@ -46,7 +46,7 @@ export async function createRing(ringId: string): Promise<true> {
 
 }
 
-export async function createSite(ringId: string, site: SiteData): Promise<true> {
+export async function createSite(ringId: string, site: SiteData): Promise<string> {
 
 	const res = await fetch(`${RingHost}/rings`, {
 		method: 'POST',
@@ -57,7 +57,8 @@ export async function createSite(ringId: string, site: SiteData): Promise<true> 
 	if (res.status !== 200) {
 		throw new Error(res.statusText);
 	}
-	return true;
+	const data = await res.json() as { siteid: string };
+	return data.siteid;
 
 }
 

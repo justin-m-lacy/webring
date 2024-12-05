@@ -3,16 +3,19 @@
 	"sites": [
 
 		{
+			"id": "site-news",
 			"url": "https://news.google.com",
 			"title": "News",
 			"banner": ""
 		},
 		{
+			"id": "site-duck",
 			"url": "https://duckduckgo.com/",
 			"title": "Duck Duck Go",
 			"banner": ""
 		},
 		{
+			"id": "site-dict",
 			"url": "https://www.merriam-webster.com/",
 			"title": "Dictionary",
 			"banner": ""

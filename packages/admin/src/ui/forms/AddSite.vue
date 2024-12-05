@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useRingStore } from '@/store/ring-store';
+import { useRouteStore } from '@/store/route-store';
 import { ref } from 'vue';
 
 const props = defineProps<{
 	ringId: string
 }>();
+
+const routeStore = useRouteStore();
 const ringStore = useRingStore();
 
 const creating = ref(false);
@@ -17,16 +20,19 @@ const iconRef = ref('');
 
 async function addSite() {
 
+	if (creating.value) return;
+
 	const url = urlRef.value;
 	const title = titleRef.value;
 
+	console.log(`adding site...: ${url}`);
 	if (!url || !title) return false;
 
 	try {
 
 		creating.value = true;
 
-		await ringStore.addRingSite(props.ringId, {
+		const siteId = await ringStore.addRingSite(props.ringId, {
 
 			id: '',
 			url,
@@ -37,8 +43,12 @@ async function addSite() {
 
 		});
 
-	} catch (err) {
+		if (typeof siteId === 'string') {
+			routeStore.setViewSite(props.ringId, siteId);
+		}
 
+	} catch (err) {
+		console.error(err);
 	} finally {
 		creating.value = false;
 	}
@@ -51,11 +61,11 @@ async function addSite() {
 		<div>{{ ringId }}: Add Site</div>
 
 		<div>
-			<input type="url" v-model="urlRef" placeholder="website url">
+			<input type="url" v-model="urlRef" placeholder="website url" required>
 			<input type="text" v-model="titleRef" placeholder="website title">
 			<input type="url" v-model="bannerRef" placeholder="website banner">
 
-			<button type="button" @click="addSite">Submit</button>
+			<button type="button" @click="addSite" :disabled="creating">Submit</button>
 		</div>
 	</div>
 </template>

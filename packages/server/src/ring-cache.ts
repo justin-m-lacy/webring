@@ -1,5 +1,5 @@
-import { ErrorDuplicate, ErrorNotFound } from "@/errors.js";
 import { SiteData, WebringData } from "@shared/webring.js";
+import { randomUUID } from 'crypto';
 import { createNewRing, deleteRingIo, loadRing, writeRing } from "./io/ring-io.js";
 import { useWebringList } from './webring-list.js';
 
@@ -30,16 +30,21 @@ const createCache = () => {
 
 	}
 
-	const addSite = async (ringId: string, siteId: string, data: SiteData) => {
+	const addSite = async (ringId: string, data: Omit<SiteData, 'id'>) => {
 
-		const ring = await getOrLoad(ringId);
-		if (ring == null) throw new ErrorNotFound();
-		const site = ring.sites.find(s => s.id === siteId);
-		if (site) throw new ErrorDuplicate();
+		const ring = ringCache.get(ringId);
+		if (!ring) return;
+
+		const siteId = randomUUID();
+
+		ring.sites.push({
+			id: siteId,
+			...data
+		})
 
 		await writeRing(ring.id, ring);
 
-		ring.sites.push(data);
+		return siteId;
 
 	}
 

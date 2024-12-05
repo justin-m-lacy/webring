@@ -2,7 +2,7 @@ import { useRingStore } from "@/store/ring-store";
 import { useDebounceFn } from "@vueuse/core";
 import { defineStore } from "pinia";
 
-export type AdminRoute = 'main' | 'createRing' | 'createSite' | 'viewRing' | 'viewSite';
+export type AdminRoute = 'main' | 'createRing' | 'addSite' | 'viewRing' | 'viewSite';
 
 /**
  * Rudimentary/basic routing.
@@ -47,6 +47,11 @@ export const useRouteStore = defineStore('route', () => {
 		loadCurRing();
 	}
 
+	function addSite(ringId: string) {
+		curRoute.value = 'addSite';
+		viewRingId.value = ringId;
+	}
+
 	function setViewSite(ringId: string, siteId: string) {
 		curRoute.value = 'viewSite';
 		viewSiteId.value = siteId;
@@ -70,6 +75,7 @@ export const useRouteStore = defineStore('route', () => {
 		viewRingId,
 		viewRing,
 		viewSiteId,
+		addSite,
 		setViewSite,
 		setViewRing,
 		createRing,

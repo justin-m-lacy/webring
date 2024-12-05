@@ -57,9 +57,11 @@ export const useRingStore = defineStore('ring', () => {
 			return false;
 		}
 
-		await createSite(ringId, siteData);
+		const siteId = await createSite(ringId, siteData);
 
 		ringList.addRingLocal(ringId);
+
+		return siteId;
 
 	}
 
@@ -73,6 +75,7 @@ export const useRingStore = defineStore('ring', () => {
 			await deleteRing(ringId);
 
 			webrings.value.delete(ringId);
+			triggerRef(webrings);
 
 		} catch (err) {
 

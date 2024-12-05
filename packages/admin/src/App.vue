@@ -6,6 +6,7 @@ import CreateRing from '@/ui/forms/CreateRing.vue';
 import { useRouteStore } from './store/route-store';
 import RingSelector from './ui/RingSelector.vue';
 import SiteView from './ui/SiteView.vue';
+import AddSite from './ui/forms/AddSite.vue';
 
 const ringList = useRingList();
 const ringStore = useRingStore();
@@ -27,6 +28,10 @@ async function deleteSite(ringId: string, siteId: string) {
 
 }
 
+function addSite(ringId: string) {
+	routeStore.addSite(ringId);
+}
+
 function viewSite(ringId: string, siteId: string) {
 	routeStore.setViewSite(ringId, siteId);
 }
@@ -43,11 +48,14 @@ function onCreated(ringId: string) {
 		<CreateRing v-if="curRoute === 'createRing'" @created="onCreated" />
 		<RingView v-else-if="curRoute === 'viewRing'"
 				  :ring-id="routeStore.viewRingId!"
+				  @add-site="addSite"
 				  @delete-site="deleteSite"
 				  @select="viewSite" />
 		<SiteView v-else-if="curRoute === 'viewSite'"
 				  :ring-id="routeStore.viewRingId!"
 				  :site-id="routeStore.viewSiteId!" />
+		<AddSite v-else-if="curRoute === 'addSite'"
+				 :ring-id="routeStore.viewRingId!" />
 
 	</div>
 </template>

@@ -13,8 +13,10 @@ const ringStore = useRingStore();
 const ring = computed(() => ringStore.getRing(props.ringId));
 
 const emits = defineEmits<{
-	(e: 'select', ring: string, site: string): void;
-	(e: 'delete-site', ring: string, site: string): void;
+	(e: 'select', ringId: string, siteId: string): void;
+	(e: 'add-site', ringId: string): void;
+
+	//(e: 'delete-site', ring: string, site: string): void;
 }>();
 
 const siteRefs = useTemplateRef('sites');
@@ -52,6 +54,11 @@ const confirmDelete = async () => {
 	}
 
 }
+
+function addSite() {
+	emits('add-site', props.ringId);
+}
+
 function tryDelete(ind: number) {
 
 	const delSite = ring.value?.sites[ind];
@@ -68,6 +75,7 @@ function tryDelete(ind: number) {
 				 :elm="deleteElm"
 				 @confirm="confirmDelete"
 				 @cancel="clearDelete" />
+		<button type="button" @click="addSite">Add Site</button>
 		<div v-if="ring" v-for="(site, ind) in ring.sites"
 			 ref="sites" :key="site.url"
 			 class="flex space-x-2 cursor-pointer">
