@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRingStore } from '@/store/ring-store';
+import { useRouteStore } from '@/store/route-store';
 
 const emits = defineEmits<{
 	(e: 'created', id: string): void;
-	(e: 'cancel'): void;
 }>();
 
 const ringStore = useRingStore();
@@ -33,6 +33,10 @@ async function tryCreate() {
 
 }
 
+function onCancel() {
+	useRouteStore().curRoute = 'home';
+}
+
 </script>
 <template>
 	<div>
@@ -40,6 +44,6 @@ async function tryCreate() {
 		<input type="text" v-model="ringId" placeholder="webring id">
 		<button type="button" :disabled="creating"
 				@click="tryCreate">Create</button>
-		<button type="button" @click="emits('cancel')">Cancel</button>
+		<button type="button" @click="onCancel">Cancel</button>
 	</div>
 </template>

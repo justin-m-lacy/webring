@@ -22,8 +22,8 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-handleRingList(app);
 handleWebring(app);
+handleRingList(app);
 handleSites(app);
 
 

@@ -25,7 +25,7 @@ async function addSite() {
 	const url = urlRef.value;
 	const title = titleRef.value;
 
-	console.log(`adding site...: ${url}`);
+	console.log(`adding site...: RING: ${props.ringId} ${url}`);
 	if (!url || !title) return false;
 
 	try {
@@ -57,15 +57,17 @@ async function addSite() {
 
 </script>
 <template>
-	<div>
+	<div class="flex flex-col gap-y-2">
 		<div>{{ ringId }}: Add Site</div>
 
-		<div>
+		<div class="flex flex-col gap-y-2 items-stretch">
 			<input type="url" v-model="urlRef" placeholder="website url" required>
 			<input type="text" v-model="titleRef" placeholder="website title">
 			<input type="url" v-model="bannerRef" placeholder="website banner">
 
-			<button type="button" @click="addSite" :disabled="creating">Submit</button>
+			<button type="button"
+					@click="addSite"
+					:disabled="creating">Submit</button>
 		</div>
 	</div>
 </template>

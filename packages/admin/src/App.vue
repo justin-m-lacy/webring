@@ -8,7 +8,6 @@ import RingSelector from './ui/RingSelector.vue';
 import SiteView from './ui/SiteView.vue';
 import AddSite from './ui/forms/AddSite.vue';
 
-const ringList = useRingList();
 const ringStore = useRingStore();
 
 const routeStore = useRouteStore();
@@ -45,7 +44,9 @@ function onCreated(ringId: string) {
 	<div class="flex flex-col space-y-1 m-2">
 		<div class="cursor-pointer text-lg">Webring Admin</div>
 		<RingSelector class="" />
-		<CreateRing v-if="curRoute === 'createRing'" @created="onCreated" />
+		<CreateRing
+					v-if="curRoute === 'createRing'"
+					@created="onCreated" />
 		<RingView v-else-if="curRoute === 'viewRing'"
 				  :ring-id="routeStore.viewRingId!"
 				  @add-site="addSite"

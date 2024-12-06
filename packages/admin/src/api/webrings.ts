@@ -48,10 +48,13 @@ export async function createRing(ringId: string): Promise<true> {
 
 export async function createSite(ringId: string, site: SiteData): Promise<string> {
 
-	const res = await fetch(`${RingHost}/rings`, {
+	const res = await fetch(`${RingHost}/rings/${ringId}/sites`, {
 		method: 'POST',
 		credentials: 'include',
-		body: JSON.stringify({ ringid: ringId, site })
+		headers: [
+			['Content-Type', 'application/json']
+		],
+		body: JSON.stringify({ site })
 	});
 
 	if (res.status !== 200) {

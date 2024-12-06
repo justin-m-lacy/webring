@@ -1,12 +1,15 @@
 import { useRingCache } from '@/ring-cache.js';
 import Express from 'express';
 
-const ringStore = useRingCache();
+export const ringStore = useRingCache();
 export const handleWebring = (app: Express.Application) => {
 
 	app.use('/rings/:ringid', async (req, res, next) => {
 
 		const ringId = req.params.ringid;
+
+		console.log(`use RingID: ${ringId}`);
+
 		if (!ringId || typeof ringId !== 'string' || ringId.length > 100) {
 			res.sendStatus(400);
 			return;
@@ -22,7 +25,6 @@ export const handleWebring = (app: Express.Application) => {
 		next();
 
 	});
-
 
 	app.get('/rings/:ringid', async (req, res) => {
 		res.send({
