@@ -52,7 +52,7 @@ export const useRingStore = defineStore('ring', () => {
 		const ring = webrings.value.get(ringId);
 		if (!ring) return false;
 
-		if (ring.sites.some(s => s.id === siteData.id || s.url === siteData.url)) {
+		if (ring.sites.some(s => s.url === siteData.url)) {
 			console.error(`Dupe Ring: ${siteData.id}: ${siteData.url}`);
 			return false;
 		}

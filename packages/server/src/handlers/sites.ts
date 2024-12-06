@@ -28,17 +28,13 @@ export const handleSites = (app: Express.Application) => {
 	/**
 	 * Post new site to ring.
 	 */
-	app.post('/rings/:ringid/sites', (req, res) => {
-
-		console.log(`post new SITE: ${req.params.ringid}`);
+	app.post('/rings/:ringid/sites', async (req, res) => {
 
 		const site = req.body.site;
 		if (!site || typeof site !== 'object') {
-			console.log(`site: ${site}`);
 			res.sendStatus(400);
 			return;
 		}
-		console.log(`site url: ${site.url}`);
 
 		const ring = res.locals.ring as WebringData;
 
@@ -49,7 +45,7 @@ export const handleSites = (app: Express.Application) => {
 			res.sendStatus(409);
 			return;
 		}
-		const siteId = ringCache.addSite(ring.id, site);
+		const siteId = await ringCache.addSite(ring.id, site);
 
 		res.json({ siteid: siteId });
 

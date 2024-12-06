@@ -2,6 +2,14 @@ import { SiteData, WebringData } from "@shared/webring";
 
 const RingHost = import.meta.env.VITE_RING_HOST;
 
+/// appends Content-Type: 'application/json' header
+const jsonHeaders = (headers: Array<[string, string]> = []) => {
+
+	headers.push(['Content-Type', 'application/json']);
+	return headers;
+
+}
+
 export async function fetchRingIds(): Promise<string[]> {
 
 	const res = await fetch(`${RingHost}/rings`, {
@@ -20,7 +28,6 @@ export async function fetchRingData(ringId: string): Promise<WebringData> {
 
 	const res = await fetch(`${RingHost}/rings/${ringId}`, {
 		method: 'GET',
-
 		credentials: 'include'
 	});
 
@@ -36,6 +43,7 @@ export async function createRing(ringId: string): Promise<true> {
 	const res = await fetch(`${RingHost}/rings`, {
 		method: 'POST',
 		credentials: 'include',
+		headers: jsonHeaders(),
 		body: JSON.stringify({ ringid: ringId })
 	});
 
@@ -51,9 +59,7 @@ export async function createSite(ringId: string, site: SiteData): Promise<string
 	const res = await fetch(`${RingHost}/rings/${ringId}/sites`, {
 		method: 'POST',
 		credentials: 'include',
-		headers: [
-			['Content-Type', 'application/json']
-		],
+		headers: jsonHeaders(),
 		body: JSON.stringify({ site })
 	});
 
@@ -67,10 +73,9 @@ export async function createSite(ringId: string, site: SiteData): Promise<string
 
 export async function deleteRing(ringId: string): Promise<true> {
 
-	const res = await fetch(`${RingHost}/rings`, {
+	const res = await fetch(`${RingHost}/rings/${ringId}`, {
 		method: 'DELETE',
-		credentials: 'include',
-		body: JSON.stringify({ ringid: ringId })
+		credentials: 'include'
 	});
 
 	if (res.status !== 200) {

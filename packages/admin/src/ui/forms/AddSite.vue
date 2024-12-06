@@ -43,6 +43,7 @@ async function addSite() {
 
 		});
 
+		console.log(`created: ${siteId}`);
 		if (typeof siteId === 'string') {
 			routeStore.setViewSite(props.ringId, siteId);
 		}
